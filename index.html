@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>쎄하다 · 오늘의 운세</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="screen">
+  <img class="glow" src="assets/glow-ellipse.svg" alt="" aria-hidden="true">
+
+  <header>
+    <nav class="nav">
+      <a class="brand" href="#" aria-label="쎄하다 홈">
+        <span class="logo-mark"><img src="assets/logo-mark.png" alt=""></span>
+        <img class="logo-text" src="assets/logo-text.png" alt="쎄하다">
+      </a>
+      <div class="actions">
+        <button class="icon-btn" aria-label="검색"><img src="assets/btn-search.svg" width="28" height="28" alt=""></button>
+        <button class="icon-btn bell" aria-label="알림"><img src="assets/bell.svg" alt=""></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-title">
+        <p class="name serif">김민지님</p>
+        <img class="dot" src="assets/dot.svg" alt="">
+        <h1 class="serif">오늘의 운세</h1>
+      </div>
+      <div class="score" aria-label="오늘의 운세 점수 80점">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+          <defs>
+            <mask id="score-mask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+              <circle cx="36" cy="36" r="36" fill="#0040B1"/>
+            </mask>
+            <filter id="score-inner" x="0" y="0" width="71" height="73" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+              <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+              <feOffset dy="2"/>
+              <feGaussianBlur stdDeviation="1.5"/>
+              <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+              <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.85 0"/>
+              <feBlend mode="normal" in2="shape"/>
+            </filter>
+            <filter id="score-drop" x="-4.33" y="25.79" width="80.84" height="80" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+              <feOffset dy="4"/>
+              <feGaussianBlur stdDeviation="2"/>
+              <feComposite in2="hardAlpha" operator="out"/>
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+              <feBlend mode="normal" in2="BackgroundImageFix" result="drop"/>
+              <feBlend mode="normal" in="SourceGraphic" in2="drop"/>
+            </filter>
+            <linearGradient id="score-water" x1="36.09" y1="25.79" x2="36.09" y2="78" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#80AEFF"/>
+              <stop offset="1" stop-color="#1E60D6"/>
+            </linearGradient>
+          </defs>
+          <g mask="url(#score-mask)">
+            <circle cx="35.5" cy="35.5" r="35.5" fill="#CADDFF" filter="url(#score-inner)"/>
+            <g class="water">
+              <g class="water-bob">
+                <rect x="-0.33" y="25.79" width="72.84" height="52.21" fill="url(#score-water)" filter="url(#score-drop)"/>
+                <path d="M35.1238 25.8019C35.1238 25.8019 27.5077 31.5792 18.1129 31.5792C8.71798 31.5792 1.10193 28.9926 1.10193 25.8019C1.10193 22.6112 8.71798 20.0246 18.1129 20.0246C27.5077 20.0246 35.1238 25.8019 35.1238 25.8019Z" fill="#A2C3FF"/>
+                <path d="M35.1241 25.8019C35.1241 25.8019 42.7402 31.5792 52.1351 31.5792C61.5299 31.5792 69.146 28.9926 69.146 25.8019C69.146 22.6112 61.5299 20.0246 52.1351 20.0246C42.7402 20.0246 35.1241 25.8019 35.1241 25.8019Z" fill="#A2C3FF"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <span class="score-num" data-target="80">80</span>
+      </div>
+    </section>
+
+    <p class="pill" aria-label="🌿 당신이 걷는 그 길이 바로 오늘의 정답입니다"><span aria-hidden="true">🌿 <span class="typed">당신이 걷는 그 길이 바로 오늘의 정답입니다</span></span></p>
+
+    <!-- 나의 사주풀이 -->
+    <section class="card card-saju">
+      <p class="eyebrow">소름돋는 미래 예측</p>
+      <h2 class="serif">나의 사주풀이</h2>
+      <div class="saju-grid">
+        <div class="saju-row">
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-b.png" style="left:-27.53%;top:-12.22%;width:410.47%;height:271.52%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">오늘의 운세</span>
+          </button>
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-b.png" style="left:-27.53%;top:-12.22%;width:410.47%;height:271.52%" alt=""></span>
+              <span class="layer top0 short"><img src="assets/icons-c.png" style="left:-116.43%;top:-39.09%;width:333.27%;height:187.7%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">지정일 운세</span>
+          </button>
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-b.png" style="left:-27.53%;top:-12.22%;width:410.47%;height:271.52%" alt=""></span>
+              <span class="layer top0 short"><img src="assets/icons-b.png" style="left:-149.22%;top:-7.61%;width:397.93%;height:268.77%" alt=""></span>
+              <span class="layer top0"><img src="assets/icons-c.png" style="left:-9.96%;top:-39.09%;width:331.27%;height:187.7%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">월별운세</span>
+          </button>
+        </div>
+        <div class="saju-row">
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-c.png" style="left:-225.81%;top:-39.09%;width:338.01%;height:187.7%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">꿈해몽</span>
+          </button>
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-b.png" style="left:-27.53%;top:-12.22%;width:410.47%;height:271.52%" alt=""></span>
+              <span class="layer top0 short"><img src="assets/icons-b.png" style="left:-149.22%;top:-7.61%;width:397.93%;height:268.77%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">짝궁합</span>
+          </button>
+          <button class="saju-item">
+            <span class="ico ico56">
+              <img class="ring" src="assets/ring56.svg" alt="">
+              <span class="layer"><img src="assets/icons-b.png" style="left:-27.53%;top:-12.22%;width:410.47%;height:271.52%" alt=""></span>
+              <span class="layer top0 short"><img src="assets/icons-b.png" style="left:-149.22%;top:-7.61%;width:397.93%;height:268.77%" alt=""></span>
+              <span class="layer top0"><img src="assets/icons-b.png" style="left:-274.73%;top:-8.24%;width:408.51%;height:272.34%" alt=""></span>
+              <span class="spark"><img src="assets/spark56.svg" alt=""></span>
+            </span>
+            <span class="label serif">로또</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 30대 여성 주제별 운세 -->
+    <section class="card card-theme">
+      <img class="vector" src="assets/theme-vector.svg" alt="">
+      <div class="title">
+        <p class="eyebrow">가장 중요한 선택의 시기를 맞은</p>
+        <h2 class="serif"><em>30대 여성</em>을 위한 주제별 운세</h2>
+      </div>
+      <div class="portrait"><img src="assets/portrait.png" alt=""></div>
+      <div class="fade"></div>
+      <div class="chips">
+        <button class="chip"><span class="chip-ico"><img src="assets/chip-icons.png" style="left:-20.03%;width:365.03%" alt=""></span>직업운</button>
+        <button class="chip"><span class="chip-ico"><img src="assets/chip-icons.png" style="left:-135.03%;width:365.03%" alt=""></span>재물운</button>
+        <button class="chip"><span class="chip-ico"><img src="assets/chip-icons.png" style="left:-230.98%;width:347.65%" alt=""></span>연애운</button>
+        <button class="chip"><span class="chip-ico svg"><img src="assets/chip-marriage.svg" alt=""></span>결혼운</button>
+        <button class="chip"><span class="chip-ico svg"><img src="assets/chip-health.svg" alt=""></span>건강운</button>
+        <button class="chip"><span class="chip-ico svg"><img src="assets/chip-people.svg" alt=""></span>대인운</button>      </div>
+    </section>
+
+    <!-- 운세 가이드 -->
+    <section class="card card-guide">
+      <div class="knot"><img src="assets/knot.png" alt=""></div>
+      <div class="title">
+        <p class="eyebrow">특별한 날을 위한</p>
+        <h2 class="serif">운세 가이드</h2>
+      </div>
+      <ul class="guide-list">
+        <li><button class="guide-item">
+          <span class="ico ico48">
+            <img class="ring" src="assets/ring48.svg" alt="">
+            <span class="layer"><img src="assets/icons-a.png" style="left:-7.22%;top:-61.41%;width:438.26%;height:245.11%" alt=""></span>
+            <span class="spark"><img src="assets/spark48.svg" alt=""></span>
+          </span>
+          <span class="text"><span class="serif">작명</span><span class="desc">평생의 운을 담은 이름 짓기</span></span>
+        </button></li>
+        <li><button class="guide-item">
+          <span class="ico ico48">
+            <img class="ring" src="assets/ring48.svg" alt="">
+            <span class="layer"><img src="assets/icons-a.png" style="left:-112.64%;top:-61.41%;width:433.45%;height:245.11%" alt=""></span>
+            <span class="spark"><img src="assets/spark48.svg" alt=""></span>
+          </span>
+          <span class="text"><span class="serif">학업수능</span><span class="desc">합격 목표에 한걸음 더</span></span>
+        </button></li>
+        <li><button class="guide-item">
+          <span class="ico ico48">
+            <img class="ring" src="assets/ring48.svg" alt="">
+            <span class="layer"><img src="assets/icons-a.png" style="left:-217.58%;top:-61.41%;width:433.45%;height:245.11%" alt=""></span>
+            <span class="spark"><img src="assets/spark48.svg" alt=""></span>
+          </span>
+          <span class="text"><span class="serif">이사</span><span class="desc">새 출발을 위한 이사하기 좋은날</span></span>
+        </button></li>
+        <li><button class="guide-item">
+          <span class="ico ico48">
+            <img class="ring" src="assets/ring48.svg" alt="">
+            <span class="layer"><img src="assets/icons-a.png" style="left:-319.02%;top:-61.41%;width:428.74%;height:245.11%" alt=""></span>
+            <span class="spark"><img src="assets/spark48.svg" alt=""></span>
+          </span>
+          <span class="text"><span class="serif">로또번호 추천</span><span class="desc">행운을 부르는 6개의 숫자</span></span>
+        </button></li>
+      </ul>
+    </section>
+  </main>
+
+  <nav class="appbar" aria-label="하단 메뉴">
+    <ul>
+      <li><a class="tab" href="#"><img class="tab-ico" src="assets/tab-sseha.svg" alt=""><span class="label">쎄하다</span></a></li>
+      <li><a class="tab" href="#" aria-current="page"><span class="tab-ico"><img class="today-ico" src="assets/tab-today.svg" alt=""></span><span class="label">오늘운세</span></a></li>
+      <li><a class="tab" href="#"><img class="tab-ico" src="assets/tab-tarot.svg" alt=""><span class="label">타로</span></a></li>
+      <li><a class="tab" href="#"><img class="tab-ico" src="assets/tab-premium.svg" alt=""><span class="label">프리미엄</span></a></li>
+      <li><a class="tab" href="#"><span class="tab-ico"><span class="bar" style="top:9.75px"></span><span class="bar" style="top:16.75px"></span><span class="bar" style="top:23.75px"></span></span><span class="label">메뉴</span></a></li>
+    </ul>
+  </nav>
+</div>
+<script>
+  // 시작 애니메이션: 물 차오름 · 0→80 카운트 · 문구 타이핑 · 카드 순차 등장
+  (function () {
+    var num = document.querySelector('.score-num');
+    var typed = document.querySelector('.pill .typed');
+    var target = num ? +num.dataset.target : 0;
+    var chars = typed ? Array.from(typed.textContent) : [];
+    if (num) num.textContent = '0';
+    if (typed) typed.textContent = '';
+
+    var run = 0; // 실행 번호: 다시 재생하면 이전 타이핑·카운트를 멈춤
+    function play() {
+      var my = ++run, root = document.documentElement;
+      root.classList.remove('play');
+      void root.offsetWidth; // CSS 애니메이션을 처음부터 다시 시작
+      root.classList.add('play');
+      if (num) countUp(my);
+      if (typed) typeQuote(my);
+    }
+    function countUp(my) { // 물 차오름과 같은 0.5s 지연, 1.6s 길이로 0 → 80
+      var delay = 500, dur = 1600, t0 = null;
+      function ease(t) { return 1 - Math.pow(1 - t, 3); }
+      num.textContent = '0';
+      function step(ts) {
+        if (my !== run) return;
+        if (t0 === null) t0 = ts;
+        var t = Math.min(Math.max((ts - t0 - delay) / dur, 0), 1);
+        num.textContent = Math.round(target * ease(t));
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    function typeQuote(my) { // 문구 박스가 나타난 뒤 한 글자씩
+      var i = 0;
+      typed.textContent = '';
+      setTimeout(function tick() {
+        if (my !== run) return;
+        typed.textContent = chars.slice(0, ++i).join('');
+        if (i < chars.length) setTimeout(tick, chars[i - 1] === ' ' ? 40 : 75);
+      }, 750);
+    }
+    // 항상 바로 시작한다 (일부 앱 내 브라우저는 화면에 보여도 hidden으로 알려주므로 기다리지 않음).
+    // 백그라운드 탭에서 열려 안 보이는 사이 끝났다면, 처음 보이는 순간 한 번 더 재생.
+    var hiddenAtLoad = document.visibilityState === 'hidden';
+    play();
+    if (hiddenAtLoad) {
+      document.addEventListener('visibilitychange', function once() {
+        if (document.visibilityState !== 'visible') return;
+        document.removeEventListener('visibilitychange', once);
+        play();
+      });
+    }
+  })();
+
+  // 주제별 운세 칩: 마우스 드래그 · 휠로도 가로 스크롤 (터치는 기본 스크롤)
+  (function () {
+    var row = document.querySelector('.chips');
+    if (!row) return;
+    var startX = 0, startLeft = 0, down = false, moved = false;
+    row.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      down = true; moved = false; startX = e.clientX; startLeft = row.scrollLeft;
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 4) { moved = true; row.classList.add('dragging'); }
+      if (moved) row.scrollLeft = startLeft - dx;
+    });
+    window.addEventListener('pointerup', function () {
+      if (!down) return;
+      down = false;
+      setTimeout(function () { row.classList.remove('dragging'); }, 0);
+    });
+    row.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    row.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // 트랙패드 가로 스와이프는 그대로
+      var max = row.scrollWidth - row.clientWidth;
+      var next = row.scrollLeft + e.deltaY;
+      if ((e.deltaY < 0 && row.scrollLeft <= 0) || (e.deltaY > 0 && row.scrollLeft >= max)) return; // 끝에선 페이지 스크롤
+      e.preventDefault();
+      row.scrollLeft = Math.min(Math.max(next, 0), max);
+    }, { passive: false });
+  })();
+
+  // 하단 탭: 선택 상태 전환
+  document.querySelectorAll('.appbar .tab').forEach(function (tab) {
+    tab.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelectorAll('.appbar .tab').forEach(function (t) { t.removeAttribute('aria-current'); });
+      tab.setAttribute('aria-current', 'page');
+    });
+  });
+</script>
+</body>
+</html>

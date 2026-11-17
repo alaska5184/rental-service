@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+<defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#E6ECF4"/><stop offset=".7" stop-color="#F7F1FA"/><stop offset="1" stop-color="#D9E2EC"/></linearGradient>
+<g id="b"><circle cx="16.3" cy="7.6" r="3"/><path d="M10.6 19.5C10.6 15.4 13 12.4 16.3 12.4 19.6 12.4 22 15.4 22 19.5Z"/></g>
+<g id="f"><circle cx="9" cy="8.2" r="3.5"/><path d="M2.2 20.6C2.2 16 5.2 12.9 9 12.9 12.8 12.9 15.8 16 15.8 20.6Z"/></g>
+</defs>
+<use xlink:href="#b" fill="#000" stroke="#C9A65A" stroke-width="2.2" stroke-linejoin="round"/>
+<use xlink:href="#b" fill="#000" stroke="url(#p)" stroke-width="1.4" stroke-linejoin="round"/>
+<use xlink:href="#b" fill="#111" stroke="#C9A65A" stroke-width=".35"/>
+<use xlink:href="#f" fill="#000" stroke="#C9A65A" stroke-width="2.2" stroke-linejoin="round"/>
+<use xlink:href="#f" fill="#000" stroke="url(#p)" stroke-width="1.4" stroke-linejoin="round"/>
+<use xlink:href="#f" fill="#111" stroke="#C9A65A" stroke-width=".35"/>
+</svg>
