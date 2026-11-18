@@ -23,14 +23,22 @@ import { useStore } from "../lib/store";
 
 const CompleteActivity: StaticActivityComponentType<"CompleteActivity"> = () => {
   const { reservationId } = useActivityParams<"CompleteActivity">();
-  const { push, pop } = useFlow();
+  const { push, pop, replace } = useFlow();
   const stack = useStack();
   const reservation = useStore((s) => s.reservations.find((r) => r.id === reservationId));
   const product = reservation ? getProduct(reservation.productId) : undefined;
 
+  /** 상품 목록 화면으로 이동 */
   const goHome = () => {
-    const depth = stack.activities.filter((a) => a.transitionState.startsWith("enter")).length;
-    if (depth > 1) pop(depth - 1);
+    const active = stack.activities.filter((a) => a.transitionState.startsWith("enter"));
+    const listIndex = active.map((a) => a.name).lastIndexOf("ProductListActivity");
+    if (listIndex >= 0) {
+      // 목록 화면이 아래에 있으면 그 위의 화면들을 한 번에 닫아요
+      pop(active.length - 1 - listIndex);
+    } else {
+      // 링크로 바로 들어와서 목록 화면이 없으면 지금 화면을 목록으로 바꿔요
+      replace("ProductListActivity", {});
+    }
   };
 
   if (!reservation || !product) {
