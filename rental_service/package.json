@@ -1,0 +1,36 @@
+{
+  "name": "rental_service",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@karrotmarket/react-monochrome-icon": "^1.35.0",
+    "@seed-design/css": "^3.3.0",
+    "@seed-design/react": "^3.3.0",
+    "@seed-design/stackflow": "^2.1.1",
+    "@stackflow/config": "^2.0.0",
+    "@stackflow/core": "^3.1.0",
+    "@stackflow/plugin-history-sync": "^2.1.0",
+    "@stackflow/plugin-renderer-basic": "^1.1.16",
+    "@stackflow/react": "^2.1.4",
+    "clsx": "^2.1.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@seed-design/vite-plugin": "^2.1.1",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6"
+  }
+}
