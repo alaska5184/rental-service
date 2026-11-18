@@ -143,7 +143,7 @@ const CompleteActivity: StaticActivityComponentType<"CompleteActivity"> = () => 
               </Box>
               <Callout
                 tone="neutral"
-                description="보증금은 물건을 돌려주고 대여자가 상태를 확인하면 돌려받아요."
+                description="보증금은 안전결제(에스크로)에 보관돼 있어요. 반납 후 대여자가 상태를 확인하면 돌려받아요."
               />
             </VStack>
           </VStack>

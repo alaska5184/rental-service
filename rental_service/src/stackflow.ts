@@ -8,6 +8,7 @@ import ProductDetailActivity from "./activities/ProductDetailActivity";
 import BookingActivity from "./activities/BookingActivity";
 import ChatActivity from "./activities/ChatActivity";
 import CompleteActivity from "./activities/CompleteActivity";
+import ConditionCheckActivity from "./activities/ConditionCheckActivity";
 
 declare module "@stackflow/config" {
   interface Register {
@@ -16,6 +17,7 @@ declare module "@stackflow/config" {
     BookingActivity: { productId: string; duration?: string };
     ChatActivity: { productId: string; reservationId?: string };
     CompleteActivity: { reservationId: string };
+    ConditionCheckActivity: { productId: string; reservationId: string };
   }
 }
 
@@ -26,6 +28,7 @@ export const config = defineConfig({
     { name: "BookingActivity", route: "/products/:productId/booking" },
     { name: "ChatActivity", route: "/chat/:productId" },
     { name: "CompleteActivity", route: "/reservations/:reservationId" },
+    { name: "ConditionCheckActivity", route: "/reservations/:reservationId/check" },
   ],
   transitionDuration: 270,
   initialActivity: () => "ProductListActivity",
@@ -39,6 +42,7 @@ export const { Stack } = stackflow({
     BookingActivity,
     ChatActivity,
     CompleteActivity,
+    ConditionCheckActivity,
   },
   plugins: [
     basicRendererPlugin(),

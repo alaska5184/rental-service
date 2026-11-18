@@ -1,9 +1,10 @@
 import {
+  IconCameraLine,
   IconLocationpinFill,
   IconPaperplaneFill,
   IconSparkle2Fill,
 } from "@karrotmarket/react-monochrome-icon";
-import { Box, HStack, Icon, Text, VStack } from "@seed-design/react";
+import { Box, HStack, Icon, PrefixIcon, Text, VStack } from "@seed-design/react";
 import { useActivityParams, useFlow, type StaticActivityComponentType } from "@stackflow/react";
 import { useEffect, useRef, useState } from "react";
 import { ActionButton } from "seed-design/ui/action-button";
@@ -17,6 +18,7 @@ import { MannerTempBadge } from "seed-design/ui/manner-temp-badge";
 import { Snackbar, useSnackbarAdapter } from "seed-design/ui/snackbar";
 import { TextField, TextFieldInput } from "seed-design/ui/text-field";
 import { ProductPhoto } from "../components/ProductPhoto";
+import { VerifiedBadge } from "../components/TrustBadges";
 import { getProduct, type Product } from "../data/products";
 import {
   DURATION_LABEL,
@@ -113,6 +115,7 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
               {product.lender.nickname}
             </Text>
             <MannerTempBadge temperature={product.lender.mannerTemp} />
+            {product.lender.verified && <VerifiedBadge verified />}
           </HStack>
         </AppBarMain>
       </AppBar>
@@ -164,6 +167,9 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
                 key={m.id}
                 message={m}
                 product={product}
+                onConditionCheck={(rid) =>
+                  push("ConditionCheckActivity", { productId: product.id, reservationId: rid })
+                }
                 reservation={
                   m.reservationId ? reservations.find((r) => r.id === m.reservationId) : undefined
                 }
@@ -243,14 +249,46 @@ function MessageRow({
   message,
   product,
   reservation,
+  onConditionCheck,
 }: {
   message: ChatMessage;
   product: Product;
   reservation?: Reservation;
+  onConditionCheck: (reservationId: string) => void;
 }) {
   return (
     <VStack gap="x1_5" align={message.from === "me" ? "flex-end" : "flex-start"}>
-      {reservation && <ReservationCard reservation={reservation} product={product} />}
+      {reservation && (
+        <ReservationCard
+          reservation={reservation}
+          product={product}
+          onConditionCheck={() => onConditionCheck(reservation.id)}
+        />
+      )}
+      {message.conditionCheck && (
+        <div className="check-card">
+          <Box px="x4" py="x3" bg="bg.positiveWeak">
+            <HStack justify="space-between" align="center">
+              <Text textStyle="t3Bold" color="fg.neutral">
+                {message.conditionCheck.stage === "pickup" ? "받을 때" : "돌려줄 때"} 상태 확인
+              </Text>
+              <Badge tone="positive" variant="weak">
+                완료
+              </Badge>
+            </HStack>
+          </Box>
+          <VStack gap="x1" px="x4" py="x3">
+            {message.conditionCheck.items.map((label) => (
+              <Text key={label} textStyle="t3Regular" color="fg.neutral">
+                ✓ {label}
+              </Text>
+            ))}
+            <Text textStyle="t3Regular" color="fg.neutralMuted">
+              사진 {message.conditionCheck.photoCount}장 첨부
+            </Text>
+          </VStack>
+        </div>
+      )}
       {message.location && (
         <div className="location-card">
           <div className="location-map" aria-hidden>
@@ -281,7 +319,15 @@ function MessageRow({
   );
 }
 
-function ReservationCard({ reservation, product }: { reservation: Reservation; product: Product }) {
+function ReservationCard({
+  reservation,
+  product,
+  onConditionCheck,
+}: {
+  reservation: Reservation;
+  product: Product;
+  onConditionCheck: () => void;
+}) {
   const confirmed = reservation.status === "confirmed";
   return (
     <div className="reservation-card">
@@ -308,6 +354,19 @@ function ReservationCard({ reservation, product }: { reservation: Reservation; p
           {DURATION_LABEL[reservation.duration]} · {RECEIVE_METHOD_LABEL[reservation.method]} ·{" "}
           {formatWon(reservation.rentalPrice + reservation.deliveryFee + reservation.deposit)}
         </Text>
+        {confirmed && (
+          <Box pt="x2">
+            <ActionButton
+              size="small"
+              variant="neutralWeak"
+              onClick={onConditionCheck}
+              style={{ width: "100%" }}
+            >
+              <PrefixIcon svg={<IconCameraLine />} />
+              상태 사진 체크
+            </ActionButton>
+          </Box>
+        )}
       </VStack>
     </div>
   );

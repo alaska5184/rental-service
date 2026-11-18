@@ -9,7 +9,8 @@ import { IdentityPlaceholder } from "seed-design/ui/identity-placeholder";
 import { MannerTempBadge } from "seed-design/ui/manner-temp-badge";
 import { BottomBar } from "../components/BottomBar";
 import { PhotoCarousel } from "../components/PhotoCarousel";
-import { getProduct } from "../data/products";
+import { getProduct, isSafeRental } from "../data/products";
+import { SafeRentalBadge, VerifiedBadge } from "../components/TrustBadges";
 import { DURATION_LABEL, formatWon, rentalPrice, type Duration } from "../lib/rental";
 import { PriceComparison } from "../components/PriceComparison";
 import { RentalNotices } from "../components/RentalNotices";
@@ -60,9 +61,12 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
           >
             <Avatar size="42" fallback={<IdentityPlaceholder />} />
             <VStack gap="x0_5" flexGrow={1}>
-              <Text textStyle="t5Bold" color="fg.neutral">
-                {product.lender.nickname}
-              </Text>
+              <HStack gap="x1_5" align="center">
+                <Text textStyle="t5Bold" color="fg.neutral">
+                  {product.lender.nickname}
+                </Text>
+                <VerifiedBadge verified={product.lender.verified} />
+              </HStack>
               <Text textStyle="t3Regular" color="fg.neutralMuted">
                 {product.lender.neighborhood}
               </Text>
@@ -73,9 +77,12 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
           {/* 브랜드 · 구매시기 */}
           <VStack gap="x4" px="spacingX.globalGutter" py="x5" flexGrow={1}>
             <VStack gap="x1">
-              <Text textStyle="t4Medium" color="fg.neutralMuted">
-                {product.brand}
-              </Text>
+              <HStack gap="x1_5" align="center">
+                <Text textStyle="t4Medium" color="fg.neutralMuted">
+                  {product.brand}
+                </Text>
+                {isSafeRental(product) && <SafeRentalBadge />}
+              </HStack>
               <Text as="h1" textStyle="t7Bold" color="fg.neutral">
                 {product.name}
               </Text>

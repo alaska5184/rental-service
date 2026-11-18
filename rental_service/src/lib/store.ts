@@ -34,6 +34,16 @@ export interface ChatMessage {
   reservationId?: string;
   /** 위치 카드 */
   location?: ChatLocation;
+  /** 상태 사진 체크리스트 카드 */
+  conditionCheck?: ConditionCheck;
+}
+
+export type ConditionStage = "pickup" | "return";
+
+export interface ConditionCheck {
+  stage: ConditionStage;
+  items: string[];
+  photoCount: number;
 }
 
 interface State {
@@ -168,5 +178,19 @@ export function sendSuggestedMessage(
   pushMessage(productId, { from: "me", ...message });
   window.setTimeout(() => {
     pushMessage(productId, { from: "lender", text: reply });
+  }, 1200);
+}
+
+/** 주고받을 때 상태 확인 체크리스트를 채팅에 공유해요 */
+export function sendConditionCheck(productId: string, check: ConditionCheck) {
+  pushMessage(productId, { from: "me", conditionCheck: check });
+  window.setTimeout(() => {
+    pushMessage(productId, {
+      from: "lender",
+      text:
+        check.stage === "pickup"
+          ? "상태 확인했어요! 저도 같은 상태로 기록해둘게요."
+          : "반납 상태 확인했어요. 보증금은 곧 돌려받으실 거예요.",
+    });
   }, 1200);
 }

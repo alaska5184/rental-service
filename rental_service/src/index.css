@@ -233,3 +233,44 @@ body {
     linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
     var(--seed-color-bg-positive-weak);
 }
+
+/* ---------- 상태 사진 체크 ---------- */
+.check-photo {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--seed-radius-r2);
+  overflow: hidden;
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+.check-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.check-photo button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--seed-radius-full);
+  background: var(--seed-color-bg-overlay);
+  color: #fff;
+  cursor: pointer;
+}
+
+.check-card {
+  width: 240px;
+  border: 1px solid var(--seed-color-stroke-neutral-weak);
+  border-radius: var(--seed-radius-r4);
+  background: var(--seed-color-bg-layer-default);
+  overflow: hidden;
+}

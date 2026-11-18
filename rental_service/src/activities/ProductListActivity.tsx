@@ -7,7 +7,14 @@ import { AppScreen, AppScreenContent } from "seed-design/ui/app-screen";
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from "seed-design/ui/chip-tabs";
 import { List, ListButtonItem, ListDivider } from "seed-design/ui/list";
 import { ProductPhoto } from "../components/ProductPhoto";
-import { CATEGORY_LABEL, PRODUCTS, type Category, type Product } from "../data/products";
+import {
+  CATEGORY_LABEL,
+  PRODUCTS,
+  isSafeRental,
+  type Category,
+  type Product,
+} from "../data/products";
+import { SafeRentalBadge } from "../components/TrustBadges";
 import { firstAvailableDate, formatAvailableFrom, formatWon } from "../lib/rental";
 import { useStore } from "../lib/store";
 
@@ -120,9 +127,12 @@ function ProductRow({
           <Text as="span" textStyle="t3Medium" color="fg.brand">
             {availableFrom}
           </Text>
-          <Text as="span" textStyle="t5Bold" color="fg.neutral">
-            1일 {formatWon(product.prices.d1)}~
-          </Text>
+          <HStack as="span" gap="x1_5" align="center">
+            <Text as="span" textStyle="t5Bold" color="fg.neutral">
+              1일 {formatWon(product.prices.d1)}~
+            </Text>
+            {isSafeRental(product) && <SafeRentalBadge />}
+          </HStack>
         </VStack>
       }
     />

@@ -10,6 +10,8 @@ export interface Lender {
   nickname: string;
   neighborhood: string;
   mannerTemp: number;
+  /** 휴대폰 본인인증 완료 */
+  verified: boolean;
 }
 
 export interface Booking {
@@ -59,7 +61,7 @@ export const PRODUCTS: Product[] = [
     name: "무선 청소기 V15 디텍트",
     brand: "다이슨",
     category: "cleaner",
-    lender: { nickname: "깔끔한고양이", neighborhood: "역삼동", mannerTemp: 42.3 },
+    lender: { nickname: "깔끔한고양이", neighborhood: "역삼동", mannerTemp: 42.3, verified: true },
     purchasedAt: "2025년 3월",
     prices: { d1: 15000, d3: 40000, d5: 64000, d7: 84000 },
     stock: 1,
@@ -82,7 +84,7 @@ export const PRODUCTS: Product[] = [
     name: "비스포크 제트 AI 청소기",
     brand: "삼성전자",
     category: "cleaner",
-    lender: { nickname: "역삼동살림꾼", neighborhood: "역삼동", mannerTemp: 38.1 },
+    lender: { nickname: "역삼동살림꾼", neighborhood: "역삼동", mannerTemp: 38.1, verified: true },
     purchasedAt: "2025년 9월",
     prices: { d1: 16000, d3: 43000, d5: 68000, d7: 90000 },
     stock: 1,
@@ -101,7 +103,7 @@ export const PRODUCTS: Product[] = [
     name: "로봇청소기 S8 MaxV Ultra",
     brand: "로보락",
     category: "cleaner",
-    lender: { nickname: "로봇덕후", neighborhood: "도곡동", mannerTemp: 51.0 },
+    lender: { nickname: "로봇덕후", neighborhood: "도곡동", mannerTemp: 51.0, verified: false },
     purchasedAt: "2024년 11월",
     prices: { d1: 22000, d3: 59000, d5: 94000, d7: 123000 },
     stock: 1,
@@ -120,7 +122,7 @@ export const PRODUCTS: Product[] = [
     name: "에어프라이어 오븐 12L",
     brand: "쿠쿠",
     category: "kitchen",
-    lender: { nickname: "주말요리사", neighborhood: "역삼동", mannerTemp: 36.8 },
+    lender: { nickname: "주말요리사", neighborhood: "역삼동", mannerTemp: 36.8, verified: true },
     purchasedAt: "2024년 5월",
     prices: { d1: 8000, d3: 22000, d5: 34000, d7: 45000 },
     stock: 2,
@@ -139,7 +141,7 @@ export const PRODUCTS: Product[] = [
     name: "전자동 커피머신 마니피카 S",
     brand: "드롱기",
     category: "kitchen",
-    lender: { nickname: "라떼한잔", neighborhood: "개포동", mannerTemp: 44.5 },
+    lender: { nickname: "라떼한잔", neighborhood: "개포동", mannerTemp: 44.5, verified: true },
     purchasedAt: "2025년 1월",
     prices: { d1: 12000, d3: 32000, d5: 51000, d7: 67000 },
     stock: 1,
@@ -159,7 +161,7 @@ export const PRODUCTS: Product[] = [
     name: "초고속 블렌더 E310",
     brand: "바이타믹스",
     category: "kitchen",
-    lender: { nickname: "스무디장인", neighborhood: "역삼동", mannerTemp: 39.2 },
+    lender: { nickname: "스무디장인", neighborhood: "역삼동", mannerTemp: 39.2, verified: true },
     purchasedAt: "2023년 12월",
     prices: { d1: 10000, d3: 27000, d5: 42000, d7: 56000 },
     stock: 1,
@@ -178,7 +180,7 @@ export const PRODUCTS: Product[] = [
     name: "슈퍼소닉 헤어드라이어",
     brand: "다이슨",
     category: "beauty",
-    lender: { nickname: "단발머리", neighborhood: "도곡동", mannerTemp: 40.7 },
+    lender: { nickname: "단발머리", neighborhood: "도곡동", mannerTemp: 40.7, verified: true },
     purchasedAt: "2025년 6월",
     prices: { d1: 9000, d3: 24000, d5: 38000, d7: 50000 },
     stock: 1,
@@ -197,7 +199,7 @@ export const PRODUCTS: Product[] = [
     name: "LED 마스크 프라엘 더마",
     brand: "LG전자",
     category: "beauty",
-    lender: { nickname: "피부관리중", neighborhood: "역삼동", mannerTemp: 37.4 },
+    lender: { nickname: "피부관리중", neighborhood: "역삼동", mannerTemp: 37.4, verified: true },
     purchasedAt: "2024년 8월",
     prices: { d1: 12000, d3: 32000, d5: 51000, d7: 67000 },
     stock: 1,
@@ -216,7 +218,7 @@ export const PRODUCTS: Product[] = [
     name: "마사지건 하이퍼볼트 2 Pro",
     brand: "테라건",
     category: "beauty",
-    lender: { nickname: "헬린이탈출", neighborhood: "개포동", mannerTemp: 45.9 },
+    lender: { nickname: "헬린이탈출", neighborhood: "개포동", mannerTemp: 45.9, verified: true },
     purchasedAt: "2025년 4월",
     prices: { d1: 7000, d3: 19000, d5: 30000, d7: 39000 },
     stock: 3,
@@ -237,4 +239,13 @@ export function getProduct(id: string): Product | undefined {
 /** Unsplash 사진 주소 (정사각형으로 잘라서 받기) */
 export function photoUrl(photoId: string, size: number): string {
   return `https://images.unsplash.com/photo-${photoId}?w=${size}&h=${size}&fit=crop&auto=format&q=75`;
+}
+
+/** 보증금 10만원 이상 고가 제품은 보험이 붙는 '안심 대여' */
+export const SAFE_RENTAL_MIN_DEPOSIT = 100000;
+/** 안심 대여 보험 보장 한도 (예시 값) */
+export const SAFE_RENTAL_COVERAGE = 1000000;
+
+export function isSafeRental(product: Product): boolean {
+  return product.deposit >= SAFE_RENTAL_MIN_DEPOSIT;
 }

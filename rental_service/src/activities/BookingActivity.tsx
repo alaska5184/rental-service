@@ -326,7 +326,7 @@ function BookingScreen({
                 <PriceRow label="보증금" value={formatWon(product.deposit)} />
                 <Callout
                   tone="informative"
-                  description="보증금은 물건을 돌려주고 대여자가 상태를 확인하면 돌려받아요. 예약은 대여자가 수락하면 확정돼요."
+                  description="보증금은 안전결제(에스크로)에 보관됐다가 반납 확인 후 돌려받아요. 이웃 간 대여라 플랫폼은 거래 당사자가 아니고, 예약은 대여자가 수락하면 확정돼요."
                 />
               </VStack>
             )}

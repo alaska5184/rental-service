@@ -1,5 +1,10 @@
 import { Text, VStack } from "@seed-design/react";
-import type { Category, Product } from "../data/products";
+import {
+  SAFE_RENTAL_COVERAGE,
+  isSafeRental,
+  type Category,
+  type Product,
+} from "../data/products";
 import { DELIVERY_FEE, MAX_RENTAL_DAYS, RETURN_HOUR, formatWon } from "../lib/rental";
 
 const CATEGORY_NOTICE: Record<Category, { title: string; body: string }> = {
@@ -29,8 +34,8 @@ export function RentalNotices({ product }: { product: Product }) {
       body: `대여자 근처(${product.lender.neighborhood})로 가지러 가거나, 택배로 받을 수 있어요. 택배는 왕복 ${formatWon(DELIVERY_FEE)}이에요.`,
     },
     {
-      title: "보증금",
-      body: `보증금 ${formatWon(product.deposit)}은 반납 후 대여자가 상태를 확인하면 돌려받아요.`,
+      title: "보증금 안전결제",
+      body: `보증금 ${formatWon(product.deposit)}은 대여자에게 바로 가지 않고 결제대행사 안전결제(에스크로)에 보관돼요. 반납 후 대여자가 상태를 확인하면 돌려받아요.`,
     },
     {
       title: "늦게 반납하면",
@@ -38,13 +43,25 @@ export function RentalNotices({ product }: { product: Product }) {
     },
     {
       title: "파손·분실",
-      body: "고장이나 분실이 생기면 수리비만큼 보증금에서 빠져요. 받을 때 상태를 사진으로 남겨두세요.",
+      body: "고장이나 분실이 생기면 수리비만큼 보증금에서 빠져요. 주고받을 때 채팅의 '상태 사진 체크'로 상태를 남겨두면 분쟁 때 근거가 돼요.",
     },
+    ...(isSafeRental(product)
+      ? [
+          {
+            title: "안심 대여 (보험)",
+            body: `고가 제품이라 보험이 함께 적용돼요. 실수로 파손·분실해도 최대 ${formatWon(SAFE_RENTAL_COVERAGE)}까지 보험으로 보장받아요.`,
+          },
+        ]
+      : []),
     {
       title: "취소",
       body: "대여 시작일 하루 전까지는 무료로 취소할 수 있어요.",
     },
     CATEGORY_NOTICE[product.category],
+    {
+      title: "플랫폼 안내",
+      body: "이 서비스는 이웃 간 대여를 연결해 주는 중개 플랫폼이에요. 거래 당사자는 대여자와 빌리는 사람이고, 분쟁이 생기면 고객센터가 조정을 도와드려요.",
+    },
   ];
 
   return (
