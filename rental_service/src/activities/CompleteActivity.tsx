@@ -16,8 +16,6 @@ import { BottomBar } from "../components/BottomBar";
 import { getProduct } from "../data/products";
 import {
   DURATION_LABEL,
-  RECEIVE_METHOD_LABEL,
-  formatDateOnly,
   formatDateTime,
   formatWon,
 } from "../lib/rental";
@@ -57,9 +55,7 @@ const CompleteActivity: StaticActivityComponentType<"CompleteActivity"> = () => 
   }
 
   const confirmed = reservation.status === "confirmed";
-  const total = reservation.rentalPrice + reservation.deliveryFee + reservation.deposit;
-  const isDelivery = reservation.method === "delivery";
-  const fmt = isDelivery ? formatDateOnly : formatDateTime;
+  const total = reservation.rentalPrice + reservation.deposit;
 
   return (
     <AppScreen>
@@ -86,9 +82,7 @@ const CompleteActivity: StaticActivityComponentType<"CompleteActivity"> = () => 
               title={confirmed ? "예약이 확정됐어요" : "예약 요청을 보냈어요"}
               description={
                 confirmed
-                  ? isDelivery
-                    ? "배송 일정은 대여자와 채팅으로 확인해보세요."
-                    : "대여자와 채팅으로 만날 장소를 정해보세요."
+                  ? "대여자와 채팅으로 만날 장소를 정해보세요."
                   : "대여자가 수락하면 예약이 확정돼요."
               }
             />
@@ -114,21 +108,14 @@ const CompleteActivity: StaticActivityComponentType<"CompleteActivity"> = () => 
                   <SummaryRow label="제품명" value={product.name} />
                   <SummaryRow
                     label="대여 날짜"
-                    value={`${fmt(reservation.start)}\n~ ${fmt(reservation.end)}`}
+                    value={`${formatDateTime(reservation.start)}\n~ ${formatDateTime(reservation.end)}`}
                   />
                   <SummaryRow label="대여 기간" value={DURATION_LABEL[reservation.duration]} />
                   <SummaryRow
-                    label="받는 방법"
-                    value={
-                      isDelivery
-                        ? `${RECEIVE_METHOD_LABEL.delivery}\n${reservation.address ?? ""}`
-                        : `${RECEIVE_METHOD_LABEL.pickup} · ${product.lender.neighborhood}`
-                    }
+                    label="방문 장소"
+                    value={`${product.lender.neighborhood} · 채팅으로 정해요`}
                   />
                   <SummaryRow label="대여 가격" value={formatWon(reservation.rentalPrice)} />
-                  {isDelivery && (
-                    <SummaryRow label="왕복 택배비" value={formatWon(reservation.deliveryFee)} />
-                  )}
                   <SummaryRow label="보증금" value={formatWon(reservation.deposit)} />
                   <Divider />
                   <HStack justify="space-between" align="center">

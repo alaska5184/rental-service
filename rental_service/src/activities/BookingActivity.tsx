@@ -19,21 +19,15 @@ import { AppScreen, AppScreenContent } from "seed-design/ui/app-screen";
 import { Callout } from "seed-design/ui/callout";
 import { Chip } from "seed-design/ui/chip";
 import { DatePicker } from "seed-design/ui/date-picker";
-import { SegmentedControl, SegmentedControlItem } from "seed-design/ui/segmented-control";
-import { TextField, TextFieldInput } from "seed-design/ui/text-field";
 import { BottomBar } from "../components/BottomBar";
 import { getProduct, type Product } from "../data/products";
 import {
-  DELIVERY_FEE,
-  DELIVERY_HOUR,
   DURATIONS,
   DURATION_LABEL,
   MAX_RENTAL_DAYS,
   PICKUP_HOURS,
-  RECEIVE_METHOD_LABEL,
   addDays,
   dateHasSlot,
-  formatDateOnly,
   formatDateTime,
   formatDay,
   formatHour,
@@ -45,7 +39,6 @@ import {
   rentalPrice,
   today as getToday,
   type Duration,
-  type ReceiveMethod,
 } from "../lib/rental";
 import { createReservation, useMyBookings } from "../lib/store";
 
@@ -79,37 +72,26 @@ function BookingScreen({
   const [date, setDate] = useState<DatePickerDate | undefined>();
   // ① 대여 기간
   const [durationChoice, setDurationChoice] = useState<Duration | undefined>(initialDuration);
-  // ③ 받는 방법 · 방문 시간
-  const [method, setMethod] = useState<ReceiveMethod>("pickup");
+  // ③ 방문 시간
   const [hourChoice, setHourChoice] = useState<number | undefined>();
-  const [address, setAddress] = useState("");
 
-  const isDelivery = method === "delivery";
-
-  /** 받는 방법에 따라 이 기간을 고를 수 있는지 (시작일을 고르기 전에는 모두 가능) */
+  /** 이 기간을 고를 수 있는지 (시작일을 고르기 전에는 모두 가능) */
   const durationAvailable = (d: Duration) => {
     if (!date) return true;
-    return isDelivery
-      ? isSlotAvailable(product, date, DELIVERY_HOUR, d, myBookings)
-      : dateHasSlot(product, date, d, myBookings);
+    return dateHasSlot(product, date, d, myBookings);
   };
   const duration = durationChoice && durationAvailable(durationChoice) ? durationChoice : undefined;
 
   const hourAvailable = (h: number) =>
     Boolean(date && duration && isSlotAvailable(product, date, h, duration, myBookings));
-  const hour = isDelivery
-    ? DELIVERY_HOUR
-    : hourChoice !== undefined && hourAvailable(hourChoice)
-      ? hourChoice
-      : undefined;
+  const hour = hourChoice !== undefined && hourAvailable(hourChoice) ? hourChoice : undefined;
 
   const interval =
     date && duration && hour !== undefined && hourAvailable(hour)
       ? rentalInterval(date, hour, duration)
       : undefined;
 
-  const placeReady = isDelivery ? address.trim().length > 0 : true;
-  const ready = Boolean(interval && placeReady);
+  const ready = Boolean(interval);
 
   /** 달력에 칠할 범위: 대여 시작일부터 대여 기간만큼 (3일이면 20·21·22일) */
   const lastUseDay = date && duration ? lastRentalDay(date, duration) : date;
@@ -117,8 +99,7 @@ function BookingScreen({
     date && lastUseDay ? { start: date, end: lastUseDay } : undefined;
 
   const price = duration ? rentalPrice(product, duration) : 0;
-  const deliveryFee = isDelivery ? DELIVERY_FEE : 0;
-  const total = price + deliveryFee + product.deposit;
+  const total = price + product.deposit;
 
   // 이미 예약이 찬 날짜는 고를 수 없게
   const constraints = useMemo(
@@ -139,10 +120,7 @@ function BookingScreen({
       end: interval.end,
       duration,
       quantity: 1,
-      method,
-      address: isDelivery ? address.trim() : undefined,
       rentalPrice: price,
-      deliveryFee,
       deposit: product.deposit,
     });
     // 완료 화면에서 뒤로 가면 예약 화면이 아니라 상품 상세로 돌아가도록 replace
@@ -215,44 +193,14 @@ function BookingScreen({
                       : `${formatDay(date)} ~ ${formatDay(lastRentalDay(date, duration))} · ${DURATION_LABEL[duration]}`}
                   </Text>
                   <Text textStyle="t3Regular" color="fg.neutralMuted">
-                    {isDelivery
-                      ? `${formatDay(lastRentalDay(date, duration))}에 택배로 돌려보내면 돼요`
-                      : `${formatDay(lastRentalDay(date, duration))} 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요`}
+                    {`${formatDay(lastRentalDay(date, duration))} 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요`}
                   </Text>
                 </VStack>
               )}
             </Section>
 
-            {/* ③ 받는 방법 · 방문 시간 */}
-            <Section step={3} title={isDelivery ? "받는 방법" : "받는 방법 · 방문 시간"}>
-              <SegmentedControl
-                aria-label="받는 방법"
-                value={method}
-                onValueChange={(v) => setMethod(v as ReceiveMethod)}
-                style={{ width: "100%" }}
-              >
-                {(Object.keys(RECEIVE_METHOD_LABEL) as ReceiveMethod[]).map((m) => (
-                  <SegmentedControlItem key={m} value={m}>
-                    {RECEIVE_METHOD_LABEL[m]}
-                  </SegmentedControlItem>
-                ))}
-              </SegmentedControl>
-
-              {isDelivery ? (
-                <VStack gap="x3">
-                  <TextField
-                    label="배송지"
-                    value={address}
-                    onValueChange={({ value }) => setAddress(value)}
-                  >
-                    <TextFieldInput placeholder="받을 주소를 입력해 주세요" />
-                  </TextField>
-                  <Text textStyle="t3Regular" color="fg.neutralMuted">
-                    대여 시작일 오전에 도착해요. 반납일에 택배로 돌려보내 주세요. (왕복 택배비{" "}
-                    {formatWon(DELIVERY_FEE)})
-                  </Text>
-                </VStack>
-              ) : (
+            {/* ③ 방문 장소 · 시간 */}
+            <Section step={3} title="방문 장소 · 시간" description="대여자 근처에서 직접 만나서 받아요">
                 <VStack gap="x3">
                   <Box bg="bg.neutralWeak" borderRadius="r3" px="x4" py="x3_5">
                     <VStack gap="x0_5">
@@ -290,7 +238,6 @@ function BookingScreen({
                     <Placeholder>대여 기간과 시작일을 먼저 선택해 주세요</Placeholder>
                   )}
                 </VStack>
-              )}
             </Section>
 
             {/* 반납 일정 (자동) */}
@@ -299,18 +246,18 @@ function BookingScreen({
                 <VStack gap="x1">
                   <HStack justify="space-between">
                     <Text textStyle="t4Regular" color="fg.neutralMuted">
-                      {isDelivery ? "도착" : "방문 시간"}
+                      방문 시간
                     </Text>
                     <Text textStyle="t4Medium" color="fg.neutral">
-                      {isDelivery ? formatDateOnly(interval.start) : formatDateTime(interval.start)}
+                      {formatDateTime(interval.start)}
                     </Text>
                   </HStack>
                   <HStack justify="space-between">
                     <Text textStyle="t4Regular" color="fg.neutralMuted">
-                      {isDelivery ? "반납 발송" : "돌려주는 시간"}
+                      돌려주는 시간
                     </Text>
                     <Text textStyle="t4Bold" color="fg.brand">
-                      {isDelivery ? formatDateOnly(interval.end) : formatDateTime(interval.end)}
+                      {formatDateTime(interval.end)}
                     </Text>
                   </HStack>
                 </VStack>
@@ -322,7 +269,6 @@ function BookingScreen({
               <VStack gap="x3">
                 <Divider />
                 <PriceRow label={`대여료 (${DURATION_LABEL[duration]})`} value={formatWon(price)} />
-                {isDelivery && <PriceRow label="왕복 택배비" value={formatWon(deliveryFee)} />}
                 <PriceRow label="보증금" value={formatWon(product.deposit)} />
                 <Callout
                   tone="informative"

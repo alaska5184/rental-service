@@ -1,5 +1,5 @@
 import type { Category, Product } from "../data/products";
-import { formatDateOnly, formatDateTime } from "./rental";
+import { formatDateTime } from "./rental";
 import type { ChatLocation, Reservation } from "./store";
 
 export interface ChatSuggestion {
@@ -26,7 +26,7 @@ const COMPONENTS_REPLY: Record<Category, string> = {
 };
 
 /**
- * 대화 상황(예약 전 / 가지러 가기 / 택배)에 맞춰 보낼 만한 메시지를 추천해요.
+ * 대화 상황(예약 전 / 예약 후)에 맞춰 보낼 만한 메시지를 추천해요.
  * 실제 서비스에서는 대화 내용을 AI가 읽고 고르면 되고, 여기서는 규칙으로 흉내 내요.
  */
 export function getChatSuggestions(
@@ -62,32 +62,6 @@ export function getChatSuggestions(
         kind: "text",
         text: "이번 주말에 빌릴 수 있을까요?",
         reply: "네! 대여하기에서 날짜 고르시면 바로 확인돼요.",
-      },
-    ];
-  }
-
-  if (reservation.method === "delivery") {
-    return [
-      {
-        id: "address",
-        label: "배송지 확인 요청",
-        kind: "text",
-        text: `배송지는 ${reservation.address ?? ""}예요. 확인 부탁드려요!`,
-        reply: `확인했어요! ${formatDateOnly(reservation.start)} 오전에 도착하게 보낼게요.`,
-      },
-      {
-        id: "tracking",
-        label: "운송장 번호 알려주세요",
-        kind: "text",
-        text: "보내시면 운송장 번호 알려주실 수 있나요?",
-        reply: "발송하면 바로 알려드릴게요!",
-      },
-      {
-        id: "return",
-        label: "반납 방법 물어보기",
-        kind: "text",
-        text: "반납은 어떻게 보내면 될까요?",
-        reply: `받으신 상자에 다시 넣어서 ${formatDateOnly(reservation.end)}에 편의점 택배로 보내주세요.`,
       },
     ];
   }

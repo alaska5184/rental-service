@@ -5,7 +5,7 @@ import {
   type Category,
   type Product,
 } from "../data/products";
-import { DELIVERY_FEE, MAX_RENTAL_DAYS, RETURN_HOUR, formatWon } from "../lib/rental";
+import { MAX_RENTAL_DAYS, RETURN_HOUR, formatWon } from "../lib/rental";
 
 const CATEGORY_NOTICE: Record<Category, { title: string; body: string }> = {
   cleaner: {
@@ -31,7 +31,7 @@ export function RentalNotices({ product }: { product: Product }) {
     },
     {
       title: "받는 방법",
-      body: `대여자 근처(${product.lender.neighborhood})로 가지러 가거나, 택배로 받을 수 있어요. 택배는 왕복 ${formatWon(DELIVERY_FEE)}이에요.`,
+      body: `대여자 근처(${product.lender.neighborhood})에서 직접 만나서 주고받아요. 정확한 장소는 채팅으로 정해요.`,
     },
     {
       title: "보증금 안전결제",

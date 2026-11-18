@@ -13,16 +13,6 @@ export const DURATION_LABEL: Record<Duration, string> = {
   7: "1주일",
 };
 
-/** 받는 방법 */
-export type ReceiveMethod = "pickup" | "delivery";
-export const RECEIVE_METHOD_LABEL: Record<ReceiveMethod, string> = {
-  pickup: "가지러 가기",
-  delivery: "택배로 받기",
-};
-/** 택배 왕복 비용 (빌리는 사람 부담) */
-export const DELIVERY_FEE = 6000;
-/** 택배는 받는 날 오전에 도착한다고 보고 9시 기준으로 계산 */
-export const DELIVERY_HOUR = 9;
 
 /** 반납 마감 시각: 대여 기간 마지막 날 밤 10시 */
 export const RETURN_HOUR = 22;

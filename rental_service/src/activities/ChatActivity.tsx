@@ -22,8 +22,6 @@ import { VerifiedBadge } from "../components/TrustBadges";
 import { getProduct, type Product } from "../data/products";
 import {
   DURATION_LABEL,
-  RECEIVE_METHOD_LABEL,
-  formatDateOnly,
   formatDateTime,
   formatWon,
 } from "../lib/rental";
@@ -346,13 +344,10 @@ function ReservationCard({
           {product.name}
         </Text>
         <Text textStyle="t3Regular" color="fg.neutralMuted">
-          {reservation.method === "delivery"
-            ? `${formatDateOnly(reservation.start)} ~ ${formatDateOnly(reservation.end)}`
-            : `${formatDateTime(reservation.start)} ~ ${formatDateTime(reservation.end)}`}
+          {formatDateTime(reservation.start)} ~ {formatDateTime(reservation.end)}
         </Text>
         <Text textStyle="t3Regular" color="fg.neutralMuted">
-          {DURATION_LABEL[reservation.duration]} · {RECEIVE_METHOD_LABEL[reservation.method]} ·{" "}
-          {formatWon(reservation.rentalPrice + reservation.deliveryFee + reservation.deposit)}
+          {DURATION_LABEL[reservation.duration]} · {formatWon(reservation.rentalPrice + reservation.deposit)}
         </Text>
         {confirmed && (
           <Box pt="x2">
