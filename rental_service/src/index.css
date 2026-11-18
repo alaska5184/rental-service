@@ -67,7 +67,8 @@ body {
   width: 6px;
   height: 6px;
   border-radius: var(--seed-radius-full);
-  background: var(--seed-color-bg-overlay-muted);
+  background: var(--seed-color-palette-static-white-alpha-500, rgba(255, 255, 255, 0.5));
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.35);
   transition: width 0.2s ease, background 0.2s ease;
 }
 
@@ -88,36 +89,14 @@ body {
   line-height: 18px;
 }
 
-/* ---------- 상품 사진 자리표시 ---------- */
+/* ---------- 상품 사진 ---------- */
 .photo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--seed-dimension-x2);
+  display: block;
   width: 100%;
   height: 100%;
-  color: var(--seed-color-fg-neutral-muted);
-}
-
-.photo[data-category="cleaner"] {
-  background: linear-gradient(145deg, #eef3ff, #dbe6ff);
-  color: #3c5bd6;
-}
-
-.photo[data-category="kitchen"] {
-  background: linear-gradient(145deg, #fff3e8, #ffe0c7);
-  color: #d0621b;
-}
-
-.photo[data-category="beauty"] {
-  background: linear-gradient(145deg, #fdeef4, #f8d6e4);
-  color: #c23a73;
-}
-
-.photo-caption {
-  font-size: 13px;
-  opacity: 0.8;
+  object-fit: cover;
+  background: var(--seed-color-bg-neutral-weak);
+  user-select: none;
 }
 
 /* ---------- 채팅 말풍선 (Seed에 없어 토큰으로 구현) ---------- */

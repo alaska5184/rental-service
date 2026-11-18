@@ -108,7 +108,7 @@ function ProductRow({
           overflowY="hidden"
           flexShrink={0}
         >
-          <ProductPhoto category={product.category} size="small" />
+          <ProductPhoto photoId={product.photos[0]} alt={product.name} size="small" />
         </Box>
       }
       title={product.name}

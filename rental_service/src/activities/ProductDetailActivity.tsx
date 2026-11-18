@@ -44,7 +44,7 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
       <AppScreenContent>
         <VStack minHeight="full">
           {/* 상품 사진 (캐러셀) */}
-          <PhotoCarousel category={product.category} count={product.photoCount} />
+          <PhotoCarousel photos={product.photos} name={product.name} />
 
           {/* 대여자 닉네임 + 매너온도 */}
           <HStack

@@ -1,35 +1,24 @@
-import {
-  IconCupHeatwaveLine,
-  IconHeartLine,
-  IconSparkle2Line,
-} from "@karrotmarket/react-monochrome-icon";
-import { Icon } from "@seed-design/react";
-import type { Category } from "../data/products";
+import { photoUrl } from "../data/products";
 
-const CATEGORY_ICON: Record<Category, React.ReactNode> = {
-  cleaner: <IconSparkle2Line />,
-  kitchen: <IconCupHeatwaveLine />,
-  beauty: <IconHeartLine />,
-};
-
-const PHOTO_CAPTIONS = ["정면", "측면", "구성품", "사용 모습"];
-
-/** 실제 사진 대신 쓰는 자리표시 이미지 */
+/** 상품 사진. 목록 썸네일은 작게, 상세 캐러셀은 크게 받아요. */
 export function ProductPhoto({
-  category,
-  index,
+  photoId,
+  alt,
   size = "large",
 }: {
-  category: Category;
-  index?: number;
+  photoId: string;
+  alt: string;
   size?: "small" | "large";
 }) {
+  const px = size === "large" ? 860 : 200;
   return (
-    <div className="photo" data-category={category} role="img" aria-label="상품 사진">
-      <Icon svg={CATEGORY_ICON[category]} size={size === "large" ? "x16" : "x6"} />
-      {size === "large" && index !== undefined && (
-        <span className="photo-caption">{PHOTO_CAPTIONS[index % PHOTO_CAPTIONS.length]}</span>
-      )}
-    </div>
+    <img
+      className="photo"
+      src={photoUrl(photoId, px)}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+    />
   );
 }

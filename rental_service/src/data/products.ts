@@ -34,8 +34,8 @@ export interface Product {
   stock: number;
   /** 보증금 (원), 반납 확인 후 돌려받음 */
   deposit: number;
-  /** 캐러셀 사진 장 수 (사진 자리표시 이미지로 표현) */
-  photoCount: number;
+  /** 상품 사진 (Unsplash 사진 ID). 첫 번째가 대표 사진 */
+  photos: string[];
   /** 이미 잡혀 있는 예약 */
   bookings: Booking[];
 }
@@ -60,7 +60,12 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 6000, h8: 9000, day: 15000 },
     stock: 1,
     deposit: 100000,
-    photoCount: 4,
+    photos: [
+      "1746645297698-306ef29852ca",
+      "1765970101654-337b573142fb",
+      "1765970101634-9cb341a94ea0",
+      "1765970101531-8d116223af49",
+    ],
     bookings: [
       { start: at(0, 10), end: at(0, 18), quantity: 1 },
       { start: at(2, 9), end: at(4, 9), quantity: 1 },
@@ -76,7 +81,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 7000, h8: 10000, day: 16000 },
     stock: 1,
     deposit: 100000,
-    photoCount: 3,
+    photos: [
+      "1722710070534-e31f0290d8de",
+      "1527515637462-cff94eecc1ac",
+      "1778062868373-e3cb41963ae5",
+    ],
     bookings: [{ start: at(1, 9), end: at(3, 9), quantity: 1 }],
   },
   {
@@ -89,7 +98,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 9000, h8: 14000, day: 22000 },
     stock: 1,
     deposit: 150000,
-    photoCount: 3,
+    photos: [
+      "1558317374-067fb5f30001",
+      "1558317374-24793bc9f2fb",
+      "1762500825301-569628303acb",
+    ],
     bookings: [],
   },
   {
@@ -102,7 +115,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 3000, h8: 5000, day: 8000 },
     stock: 2,
     deposit: 30000,
-    photoCount: 3,
+    photos: [
+      "1774074645537-f72f70d40d12",
+      "1774074645546-13474e7e6128",
+      "1781737857663-f1f14a60ba46",
+    ],
     bookings: [{ start: at(0, 12), end: at(0, 20), quantity: 1 }],
   },
   {
@@ -115,7 +132,12 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 5000, h8: 8000, day: 12000 },
     stock: 1,
     deposit: 80000,
-    photoCount: 4,
+    photos: [
+      "1620807773206-49c1f2957417",
+      "1583165278997-0250ea5d72e2",
+      "1475296204602-08d15839e95f",
+      "1616388761741-a5936c6f61f6",
+    ],
     bookings: [{ start: at(1, 14), end: at(1, 22), quantity: 1 }],
   },
   {
@@ -128,7 +150,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 4000, h8: 6000, day: 10000 },
     stock: 1,
     deposit: 50000,
-    photoCount: 2,
+    photos: [
+      "1570222094114-d054a817e56b",
+      "1622818426197-d54f85b88690",
+      "1780511879744-af5e51e70f28",
+    ],
     bookings: [],
   },
   {
@@ -141,7 +167,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 4000, h8: 6000, day: 9000 },
     stock: 1,
     deposit: 50000,
-    photoCount: 3,
+    photos: [
+      "1522338140262-f46f5913618a",
+      "1522336284037-91f7da073525",
+      "1727364438136-6edc10ef0a52",
+    ],
     bookings: [{ start: at(0, 9), end: at(1, 9), quantity: 1 }],
   },
   {
@@ -154,7 +184,11 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 5000, h8: 8000, day: 12000 },
     stock: 1,
     deposit: 80000,
-    photoCount: 3,
+    photos: [
+      "1720424643394-cf605de24655",
+      "1720424643388-0a5f72948ea7",
+      "1710839465443-8671ced76e09",
+    ],
     bookings: [],
   },
   {
@@ -167,11 +201,20 @@ export const PRODUCTS: Product[] = [
     prices: { h4: 3000, h8: 5000, day: 7000 },
     stock: 3,
     deposit: 30000,
-    photoCount: 2,
+    photos: [
+      "1746278925416-9d6c71f55c2d",
+      "1755254926874-0512d5ae1a60",
+      "1768508236664-3f294aaf7d41",
+    ],
     bookings: [{ start: at(0, 9), end: at(2, 9), quantity: 2 }],
   },
 ];
 
 export function getProduct(id: string): Product | undefined {
   return PRODUCTS.find((p) => p.id === id);
+}
+
+/** Unsplash 사진 주소 (정사각형으로 잘라서 받기) */
+export function photoUrl(photoId: string, size: number): string {
+  return `https://images.unsplash.com/photo-${photoId}?w=${size}&h=${size}&fit=crop&auto=format&q=75`;
 }

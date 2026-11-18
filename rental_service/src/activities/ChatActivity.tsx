@@ -100,7 +100,7 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
             align="center"
           >
             <Box width="x10" height="x10" borderRadius="r2" overflowX="hidden" overflowY="hidden" flexShrink={0}>
-              <ProductPhoto category={product.category} size="small" />
+              <ProductPhoto photoId={product.photos[0]} alt={product.name} size="small" />
             </Box>
             <VStack gap="x0_5" flexGrow={1} minWidth="0">
               <Text textStyle="t4Medium" color="fg.neutral" maxLines={1}>

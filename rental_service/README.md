@@ -35,7 +35,7 @@ npm run dev
 ## 참고
 
 - 서버 없이 `src/data/products.ts`의 가짜 데이터로 동작합니다. 예약과 채팅은 탭을 닫으면 사라집니다.
-- 상품 사진은 실제 이미지 대신 카테고리 아이콘 자리표시를 씁니다.
+- 상품 사진은 [Unsplash](https://unsplash.com/license)의 무료 사진을 주소로 불러옵니다 (`src/data/products.ts`의 `photos`). 실제 상품 사진이 생기면 이 값만 바꾸면 됩니다.
 - SEED에 없는 **이미지 캐러셀**과 **채팅 말풍선**은 SEED 색상·간격 토큰으로 직접 만들었습니다 (`src/index.css`).
 - SEED Time Picker는 특정 시간을 막을 수 없어서, 받는 시간은 SEED Chip(라디오)으로 고르게 했습니다.
 - `seed-design/ui/*`는 `npx @seed-design/cli add`로 받은 스니펫입니다. Stackflow 2.x에 맞춰 `app-bar.tsx`, `app-screen.tsx`의 `useActions`를 `useFlow`로 바꿨습니다.
