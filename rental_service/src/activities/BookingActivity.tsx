@@ -39,7 +39,9 @@ import {
   formatHour,
   formatWon,
   isSlotAvailable,
+  lastRentalDay,
   rentalInterval,
+  RETURN_HOUR,
   rentalPrice,
   today as getToday,
   type Duration,
@@ -110,7 +112,7 @@ function BookingScreen({
   const ready = Boolean(interval && placeReady);
 
   /** 달력에 칠할 범위: 받는 날부터 대여 기간만큼 (3일이면 20·21·22일) */
-  const lastUseDay = date && duration ? addDays(date, duration - 1) : date;
+  const lastUseDay = date && duration ? lastRentalDay(date, duration) : date;
   const calendarRange: DatePickerRangeValue | undefined =
     date && lastUseDay ? { start: date, end: lastUseDay } : undefined;
 
@@ -213,10 +215,12 @@ function BookingScreen({
                   <Text textStyle="t4Medium" color="fg.brand">
                     {duration === 1
                       ? `${formatDay(date)} · ${DURATION_LABEL[duration]}`
-                      : `${formatDay(date)} ~ ${formatDay(addDays(date, duration - 1))} · ${DURATION_LABEL[duration]}`}
+                      : `${formatDay(date)} ~ ${formatDay(lastRentalDay(date, duration))} · ${DURATION_LABEL[duration]}`}
                   </Text>
                   <Text textStyle="t3Regular" color="fg.neutralMuted">
-                    {formatDay(addDays(date, duration))} 받은 시간까지 돌려주면 돼요
+                    {isDelivery
+                      ? `${formatDay(lastRentalDay(date, duration))}에 택배로 돌려보내면 돼요`
+                      : `${formatDay(lastRentalDay(date, duration))} 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요`}
                   </Text>
                 </VStack>
               )}

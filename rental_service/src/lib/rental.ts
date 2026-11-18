@@ -24,6 +24,9 @@ export const DELIVERY_FEE = 6000;
 /** 택배는 받는 날 오전에 도착한다고 보고 9시 기준으로 계산 */
 export const DELIVERY_HOUR = 9;
 
+/** 반납 마감 시각: 대여 기간 마지막 날 밤 10시 */
+export const RETURN_HOUR = 22;
+
 /** 받는 시간으로 고를 수 있는 시각 (09:00 ~ 20:00, 1시간 간격) */
 export const PICKUP_HOURS = Array.from({ length: 12 }, (_, i) => 9 + i);
 
@@ -52,14 +55,19 @@ export function diffDays(start: DatePickerDate, end: DatePickerDate): number {
   return Math.round((toDate(end).getTime() - toDate(start).getTime()) / (24 * HOUR));
 }
 
-/** 대여 구간: 받는 시각 ~ (일수 뒤) 같은 시각에 반납 */
+/** 대여 기간 마지막 날 (받는 날 포함 N일째) */
+export function lastRentalDay(pickupDate: DatePickerDate, days: number): DatePickerDate {
+  return addDays(pickupDate, days - 1);
+}
+
+/** 대여 구간: 받는 시각 ~ 마지막 날 밤 10시 (3일이면 20일 받고 22일 반납) */
 export function rentalInterval(
   pickupDate: DatePickerDate,
   hour: number,
   days: number,
 ): { start: number; end: number } {
   const start = toDate(pickupDate, hour).getTime();
-  return { start, end: toDate(addDays(pickupDate, days), hour).getTime() };
+  return { start, end: toDate(lastRentalDay(pickupDate, days), RETURN_HOUR).getTime() };
 }
 
 /** 구간 동안 남아 있는 수량 */

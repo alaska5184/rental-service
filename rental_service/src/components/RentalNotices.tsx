@@ -1,6 +1,6 @@
 import { Text, VStack } from "@seed-design/react";
 import type { Category, Product } from "../data/products";
-import { DELIVERY_FEE, MAX_RENTAL_DAYS, formatWon } from "../lib/rental";
+import { DELIVERY_FEE, MAX_RENTAL_DAYS, RETURN_HOUR, formatWon } from "../lib/rental";
 
 const CATEGORY_NOTICE: Record<Category, { title: string; body: string }> = {
   cleaner: {
@@ -22,7 +22,7 @@ export function RentalNotices({ product }: { product: Product }) {
   const notices = [
     {
       title: "대여 기간",
-      body: `1일 · 3일 · 5일 · 1주일 중에 고를 수 있어요. 최대 ${MAX_RENTAL_DAYS}일까지 빌릴 수 있어요.`,
+      body: `1일 · 3일 · 5일 · 1주일 중에 고를 수 있어요. 받는 날을 포함해 세고, 마지막 날 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요. (최대 ${MAX_RENTAL_DAYS}일)`,
     },
     {
       title: "받는 방법",
