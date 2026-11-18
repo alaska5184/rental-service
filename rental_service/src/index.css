@@ -145,3 +145,43 @@ body {
   background: var(--seed-color-bg-layer-default);
   overflow: hidden;
 }
+
+/* ---------- 기간별 요금 비교 ---------- */
+.price-row {
+  display: block;
+  width: 100%;
+  padding: var(--seed-dimension-x3_5) var(--seed-dimension-x4);
+  border: 1px solid var(--seed-color-stroke-neutral-weak);
+  border-radius: var(--seed-radius-r3);
+  background: var(--seed-color-bg-layer-default);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.price-row[data-selected="true"] {
+  border-color: var(--seed-color-stroke-brand-solid);
+  background: var(--seed-color-bg-brand-weak);
+}
+
+/* ---------- 안내사항 ---------- */
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+  margin: 0;
+  padding: var(--seed-dimension-x4);
+  border-radius: var(--seed-radius-r3);
+  background: var(--seed-color-bg-neutral-weak);
+  list-style: none;
+}
+
+.notice-list li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x0_5);
+}
+
+.notice-list p {
+  margin: 0;
+}

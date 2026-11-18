@@ -10,12 +10,16 @@ import { MannerTempBadge } from "seed-design/ui/manner-temp-badge";
 import { BottomBar } from "../components/BottomBar";
 import { PhotoCarousel } from "../components/PhotoCarousel";
 import { getProduct } from "../data/products";
-import { formatWon } from "../lib/rental";
+import { DURATION_LABEL, formatWon, rentalPrice, type Duration } from "../lib/rental";
+import { PriceComparison } from "../components/PriceComparison";
+import { RentalNotices } from "../components/RentalNotices";
+import { useState } from "react";
 
 const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"> = () => {
   const { productId } = useActivityParams<"ProductDetailActivity">();
   const { push } = useFlow();
   const product = getProduct(productId);
+  const [duration, setDuration] = useState<Duration>(1);
 
   if (!product) {
     return (
@@ -89,16 +93,24 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
               <InfoRow label="대여자" value={product.lender.nickname} />
               <InfoRow label="구매시기" value={product.purchasedAt} />
             </VStack>
+
+            <Box pt="x4">
+              <PriceComparison product={product} selected={duration} onSelect={setDuration} />
+            </Box>
+
+            <Box pt="x4" pb="x4">
+              <RentalNotices product={product} />
+            </Box>
           </VStack>
 
           <BottomBar>
             <HStack gap="x3" align="center">
               <VStack gap="x0_5" flexGrow={1}>
                 <Text textStyle="t5Bold" color="fg.neutral">
-                  1일 {formatWon(product.prices.d1)}~
+                  {formatWon(rentalPrice(product, duration))}
                 </Text>
                 <Text textStyle="t2Regular" color="fg.neutralMuted">
-                  1주일 {formatWon(product.prices.d7)}
+                  {DURATION_LABEL[duration]} 대여
                 </Text>
               </VStack>
               <ActionButton
@@ -111,7 +123,7 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
               <ActionButton
                 variant="brandSolid"
                 size="large"
-                onClick={() => push("BookingActivity", { productId: product.id })}
+                onClick={() => push("BookingActivity", { productId: product.id, duration: String(duration) })}
               >
                 대여하기
               </ActionButton>

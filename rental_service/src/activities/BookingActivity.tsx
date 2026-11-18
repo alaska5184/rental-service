@@ -49,13 +49,25 @@ import { createReservation, useMyBookings } from "../lib/store";
 const BOOKABLE_DAYS = 60;
 
 const BookingActivity: StaticActivityComponentType<"BookingActivity"> = () => {
-  const { productId } = useActivityParams<"BookingActivity">();
+  const { productId, duration } = useActivityParams<"BookingActivity">();
   const product = getProduct(productId);
   if (!product) return null;
-  return <BookingScreen product={product} />;
+  const initial = Number(duration);
+  return (
+    <BookingScreen
+      product={product}
+      initialDuration={DURATIONS.includes(initial as Duration) ? (initial as Duration) : undefined}
+    />
+  );
 };
 
-function BookingScreen({ product }: { product: Product }) {
+function BookingScreen({
+  product,
+  initialDuration,
+}: {
+  product: Product;
+  initialDuration?: Duration;
+}) {
   const { replace } = useFlow();
   const myBookings = useMyBookings(product.id);
   const today = useMemo(() => getToday(), []);
@@ -63,7 +75,7 @@ function BookingScreen({ product }: { product: Product }) {
   // ① 날짜 (받는 날)
   const [date, setDate] = useState<DatePickerDate | undefined>();
   // ② 대여 기간
-  const [durationChoice, setDurationChoice] = useState<Duration | undefined>();
+  const [durationChoice, setDurationChoice] = useState<Duration | undefined>(initialDuration);
   // ③ 받는 방법 · 시간 · 장소
   const [method, setMethod] = useState<ReceiveMethod>("pickup");
   const [hourChoice, setHourChoice] = useState<number | undefined>();

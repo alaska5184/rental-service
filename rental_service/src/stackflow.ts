@@ -13,7 +13,7 @@ declare module "@stackflow/config" {
   interface Register {
     ProductListActivity: {};
     ProductDetailActivity: { productId: string };
-    BookingActivity: { productId: string };
+    BookingActivity: { productId: string; duration?: string };
     ChatActivity: { productId: string; reservationId?: string };
     CompleteActivity: { reservationId: string };
   }
