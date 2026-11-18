@@ -136,12 +136,10 @@ export function formatHour(hour: number): string {
   return `${String(hour).padStart(2, "0")}:00`;
 }
 
-/** 목록용: "오늘부터", "내일부터", "11.20(목)부터" */
+/** 목록용: "오늘 대여 가능", "11.20(목)부터 대여 가능" */
 export function formatAvailableFrom(d: DatePickerDate | undefined): string {
   if (!d) return "예약 마감";
-  const offset = diffDays(today(), d);
-  if (offset === 0) return "오늘부터 대여 가능";
-  if (offset === 1) return "내일부터 대여 가능";
+  if (diffDays(today(), d) === 0) return "오늘 대여 가능";
   return `${formatDay(d)}부터 대여 가능`;
 }
 
