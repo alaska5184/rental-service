@@ -68,10 +68,18 @@ export function PriceComparison({
               </HStack>
               <HStack justify="space-between" align="center" gap="x2" pt="x1_5">
                 {/* 1일씩 따로 빌릴 때와 비교한 절약 금액 */}
-                <Text textStyle="t3Medium" color={c.saved > 0 ? "fg.brand" : "fg.neutralSubtle"}>
-                  {c.saved > 0
-                    ? `1일씩 빌리는 것보다 ${formatWon(c.saved)} 아껴요`
-                    : "기본 요금"}
+                <Text textStyle="t3Medium" color="fg.neutralSubtle">
+                  {c.saved > 0 ? (
+                    <>
+                      1일씩 빌리는 것보다{" "}
+                      <Text as="span" textStyle="t3Medium" color="fg.brand">
+                        {formatWon(c.saved)}
+                      </Text>{" "}
+                      아껴요
+                    </>
+                  ) : (
+                    "기본 요금"
+                  )}
                 </Text>
                 <Text textStyle="t3Regular" color="fg.neutralMuted" style={{ flexShrink: 0 }}>
                   1일당 {formatWon(c.perDay)}
