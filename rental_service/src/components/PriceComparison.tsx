@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "@seed-design/react";
+import { HStack, Text, VStack } from "@seed-design/react";
 import { Badge } from "seed-design/ui/badge";
 import type { Product } from "../data/products";
 import { DURATIONS, DURATION_LABEL, formatWon, rentalPrice, type Duration } from "../lib/rental";
@@ -26,9 +26,6 @@ export function PriceComparison({
   selected: Duration;
   onSelect: (d: Duration) => void;
 }) {
-  const maxPerDay = product.prices.d1;
-  const current = compare(product, selected);
-
   return (
     <VStack gap="x3">
       <VStack gap="x1">
@@ -69,20 +66,13 @@ export function PriceComparison({
                   {formatWon(c.total)}
                 </Text>
               </HStack>
-              <HStack gap="x2" align="center" pt="x2">
-                {/* 1일당 금액을 막대로 비교 */}
-                <Box flexGrow={1} height="x1_5" borderRadius="full" bg="bg.neutralWeak" overflowX="hidden">
-                  <Box
-                    height="full"
-                    borderRadius="full"
-                    style={{
-                      width: `${(c.perDay / maxPerDay) * 100}%`,
-                      background: isSelected
-                        ? "var(--seed-color-bg-brand-solid)"
-                        : "var(--seed-color-palette-gray-400)",
-                    }}
-                  />
-                </Box>
+              <HStack justify="space-between" align="center" gap="x2" pt="x1_5">
+                {/* 1일씩 따로 빌릴 때와 비교한 절약 금액 */}
+                <Text textStyle="t3Medium" color={c.saved > 0 ? "fg.brand" : "fg.neutralSubtle"}>
+                  {c.saved > 0
+                    ? `1일씩 빌리는 것보다 ${formatWon(c.saved)} 아껴요`
+                    : "기본 요금"}
+                </Text>
                 <Text textStyle="t3Regular" color="fg.neutralMuted" style={{ flexShrink: 0 }}>
                   1일당 {formatWon(c.perDay)}
                 </Text>
@@ -91,12 +81,6 @@ export function PriceComparison({
           );
         })}
       </VStack>
-
-      {current.saved > 0 && (
-        <Text textStyle="t4Medium" color="fg.brand">
-          1일씩 {selected}번 빌리는 것보다 {formatWon(current.saved)} 아껴요
-        </Text>
-      )}
     </VStack>
   );
 }
