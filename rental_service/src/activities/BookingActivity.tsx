@@ -9,6 +9,7 @@ import {
   dateOnOrBefore,
   excludeDates,
   type DatePickerDate,
+  type DatePickerRangeValue,
 } from "@seed-design/react";
 import { useActivityParams, useFlow, type StaticActivityComponentType } from "@stackflow/react";
 import { useMemo, useState } from "react";
@@ -108,6 +109,11 @@ function BookingScreen({
   const placeReady = isDelivery ? address.trim().length > 0 : true;
   const ready = Boolean(interval && placeReady);
 
+  /** 달력에 칠할 범위: 받는 날부터 대여 기간만큼 (3일이면 20·21·22일) */
+  const lastUseDay = date && duration ? addDays(date, duration - 1) : date;
+  const calendarRange: DatePickerRangeValue | undefined =
+    date && lastUseDay ? { start: date, end: lastUseDay } : undefined;
+
   const price = duration ? rentalPrice(product, duration) : 0;
   const deliveryFee = isDelivery ? DELIVERY_FEE : 0;
   const total = price + deliveryFee + product.deposit;
@@ -162,10 +168,16 @@ function BookingScreen({
 
             {/* ① 날짜 */}
             <Section step={1} title="받는 날" description="회색 날짜는 이미 예약이 차 있어요">
+              {/* 받는 날을 누르면, 고른 대여 기간만큼 달력에 범위로 표시해요 */}
               <DatePicker
+                selectionMode="range"
                 today={today}
-                defaultValue={date}
-                onValueChange={(v) => setDate(v ?? undefined)}
+                value={calendarRange}
+                onValueChange={(v) => {
+                  // 범위의 시작일을 받는 날로 써요 (끝은 대여 기간으로 자동 계산)
+                  const next = v?.start;
+                  if (next) setDate(next);
+                }}
                 constraints={constraints}
               />
             </Section>
@@ -197,9 +209,16 @@ function BookingScreen({
                 <Placeholder>받는 날을 먼저 선택해 주세요</Placeholder>
               )}
               {date && duration && (
-                <Text textStyle="t4Medium" color="fg.brand">
-                  {formatDay(date)} ~ {formatDay(addDays(date, duration))} · {DURATION_LABEL[duration]}
-                </Text>
+                <VStack gap="x0_5">
+                  <Text textStyle="t4Medium" color="fg.brand">
+                    {duration === 1
+                      ? `${formatDay(date)} · ${DURATION_LABEL[duration]}`
+                      : `${formatDay(date)} ~ ${formatDay(addDays(date, duration - 1))} · ${DURATION_LABEL[duration]}`}
+                  </Text>
+                  <Text textStyle="t3Regular" color="fg.neutralMuted">
+                    {formatDay(addDays(date, duration))} 받은 시간까지 돌려주면 돼요
+                  </Text>
+                </VStack>
               )}
             </Section>
 
