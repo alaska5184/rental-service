@@ -75,20 +75,20 @@ function BookingScreen({
   const myBookings = useMyBookings(product.id);
   const today = useMemo(() => getToday(), []);
 
-  // ① 날짜 (받는 날)
+  // ② 대여 시작일
   const [date, setDate] = useState<DatePickerDate | undefined>();
-  // ② 대여 기간
+  // ① 대여 기간
   const [durationChoice, setDurationChoice] = useState<Duration | undefined>(initialDuration);
-  // ③ 받는 방법 · 시간 · 장소
+  // ③ 받는 방법 · 방문 시간
   const [method, setMethod] = useState<ReceiveMethod>("pickup");
   const [hourChoice, setHourChoice] = useState<number | undefined>();
   const [address, setAddress] = useState("");
 
   const isDelivery = method === "delivery";
 
-  /** 받는 방법에 따라 이 기간을 고를 수 있는지 */
+  /** 받는 방법에 따라 이 기간을 고를 수 있는지 (시작일을 고르기 전에는 모두 가능) */
   const durationAvailable = (d: Duration) => {
-    if (!date) return false;
+    if (!date) return true;
     return isDelivery
       ? isSlotAvailable(product, date, DELIVERY_HOUR, d, myBookings)
       : dateHasSlot(product, date, d, myBookings);
@@ -111,7 +111,7 @@ function BookingScreen({
   const placeReady = isDelivery ? address.trim().length > 0 : true;
   const ready = Boolean(interval && placeReady);
 
-  /** 달력에 칠할 범위: 받는 날부터 대여 기간만큼 (3일이면 20·21·22일) */
+  /** 달력에 칠할 범위: 대여 시작일부터 대여 기간만큼 (3일이면 20·21·22일) */
   const lastUseDay = date && duration ? lastRentalDay(date, duration) : date;
   const calendarRange: DatePickerRangeValue | undefined =
     date && lastUseDay ? { start: date, end: lastUseDay } : undefined;
@@ -125,9 +125,10 @@ function BookingScreen({
     () => [
       dateOnOrAfter(today),
       dateOnOrBefore(addDays(today, BOOKABLE_DAYS)),
-      excludeDates((d) => !dateHasSlot(product, d, 1, myBookings)),
+      // 고른 대여 기간을 다 채울 수 없는 날은 시작일로 고를 수 없게
+      excludeDates((d) => !dateHasSlot(product, d, durationChoice ?? 1, myBookings)),
     ],
-    [today, product, myBookings],
+    [today, product, myBookings, durationChoice],
   );
 
   const submit = () => {
@@ -168,48 +169,44 @@ function BookingScreen({
               </Text>
             </VStack>
 
-            {/* ① 날짜 */}
-            <Section step={1} title="받는 날" description="회색 날짜는 이미 예약이 차 있어요">
-              {/* 받는 날을 누르면, 고른 대여 기간만큼 달력에 범위로 표시해요 */}
+            {/* ① 대여 기간 */}
+            <Section step={1} title="대여 기간" description={`최대 ${MAX_RENTAL_DAYS}일까지 빌릴 수 있어요`}>
+              <Chip.RadioRoot
+                aria-label="대여 기간"
+                value={duration ? String(duration) : ""}
+                onValueChange={(v) => setDurationChoice(Number(v) as Duration)}
+              >
+                <Grid columns={2} gap="x2">
+                  {DURATIONS.map((d) => (
+                    <Chip.RadioItem
+                      key={d}
+                      value={String(d)}
+                      disabled={!durationAvailable(d)}
+                      style={{ width: "100%", justifyContent: "center" }}
+                    >
+                      <Chip.Label>
+                        {DURATION_LABEL[d]} · {formatWon(rentalPrice(product, d))}
+                      </Chip.Label>
+                    </Chip.RadioItem>
+                  ))}
+                </Grid>
+              </Chip.RadioRoot>
+            </Section>
+
+            {/* ② 대여 시작일 */}
+            <Section step={2} title="대여 시작일" description="회색 날짜는 이미 예약이 차 있어요">
+              {/* 시작일을 누르면, 고른 대여 기간만큼 달력에 범위로 표시해요 */}
               <DatePicker
                 selectionMode="range"
                 today={today}
                 value={calendarRange}
                 onValueChange={(v) => {
-                  // 범위의 시작일을 받는 날로 써요 (끝은 대여 기간으로 자동 계산)
+                  // 범위의 시작일을 대여 시작일로 써요 (끝은 대여 기간으로 자동 계산)
                   const next = v?.start;
                   if (next) setDate(next);
                 }}
                 constraints={constraints}
               />
-            </Section>
-
-            {/* ② 대여 기간 */}
-            <Section step={2} title="대여 기간" description={`최대 ${MAX_RENTAL_DAYS}일까지 빌릴 수 있어요`}>
-              {date ? (
-                <Chip.RadioRoot
-                  aria-label="대여 기간"
-                  value={duration ? String(duration) : ""}
-                  onValueChange={(v) => setDurationChoice(Number(v) as Duration)}
-                >
-                  <Grid columns={2} gap="x2">
-                    {DURATIONS.map((d) => (
-                      <Chip.RadioItem
-                        key={d}
-                        value={String(d)}
-                        disabled={!durationAvailable(d)}
-                        style={{ width: "100%", justifyContent: "center" }}
-                      >
-                        <Chip.Label>
-                          {DURATION_LABEL[d]} · {formatWon(rentalPrice(product, d))}
-                        </Chip.Label>
-                      </Chip.RadioItem>
-                    ))}
-                  </Grid>
-                </Chip.RadioRoot>
-              ) : (
-                <Placeholder>받는 날을 먼저 선택해 주세요</Placeholder>
-              )}
               {date && duration && (
                 <VStack gap="x0_5">
                   <Text textStyle="t4Medium" color="fg.brand">
@@ -226,8 +223,8 @@ function BookingScreen({
               )}
             </Section>
 
-            {/* ③ 받는 방법 · 시간 · 장소 */}
-            <Section step={3} title="받는 방법">
+            {/* ③ 받는 방법 · 방문 시간 */}
+            <Section step={3} title={isDelivery ? "받는 방법" : "받는 방법 · 방문 시간"}>
               <SegmentedControl
                 aria-label="받는 방법"
                 value={method}
@@ -251,7 +248,7 @@ function BookingScreen({
                     <TextFieldInput placeholder="받을 주소를 입력해 주세요" />
                   </TextField>
                   <Text textStyle="t3Regular" color="fg.neutralMuted">
-                    받는 날 오전에 도착해요. 반납일에 택배로 돌려보내 주세요. (왕복 택배비{" "}
+                    대여 시작일 오전에 도착해요. 반납일에 택배로 돌려보내 주세요. (왕복 택배비{" "}
                     {formatWon(DELIVERY_FEE)})
                   </Text>
                 </VStack>
@@ -268,11 +265,11 @@ function BookingScreen({
                     </VStack>
                   </Box>
                   <Text textStyle="t4Bold" color="fg.neutral">
-                    받는 시간
+                    방문 시간
                   </Text>
                   {date && duration ? (
                     <Chip.RadioRoot
-                      aria-label="받는 시간"
+                      aria-label="방문 시간"
                       value={hour !== undefined ? String(hour) : ""}
                       onValueChange={(v) => setHourChoice(Number(v))}
                     >
@@ -290,7 +287,7 @@ function BookingScreen({
                       </Grid>
                     </Chip.RadioRoot>
                   ) : (
-                    <Placeholder>날짜와 대여 기간을 먼저 선택해 주세요</Placeholder>
+                    <Placeholder>대여 기간과 시작일을 먼저 선택해 주세요</Placeholder>
                   )}
                 </VStack>
               )}
@@ -302,7 +299,7 @@ function BookingScreen({
                 <VStack gap="x1">
                   <HStack justify="space-between">
                     <Text textStyle="t4Regular" color="fg.neutralMuted">
-                      {isDelivery ? "도착" : "받는 시간"}
+                      {isDelivery ? "도착" : "방문 시간"}
                     </Text>
                     <Text textStyle="t4Medium" color="fg.neutral">
                       {isDelivery ? formatDateOnly(interval.start) : formatDateTime(interval.start)}

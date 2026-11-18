@@ -102,9 +102,9 @@ export function getChatSuggestions(
     },
     {
       id: "time",
-      label: "받는 시간 확인",
+      label: "방문 시간 확인",
       kind: "text",
-      text: `${formatDateTime(reservation.start)}에 받는 거 맞으시죠?`,
+      text: `${formatDateTime(reservation.start)}에 방문하는 거 맞으시죠?`,
       reply: "네 맞아요! 늦으시면 미리 알려주세요.",
     },
     {

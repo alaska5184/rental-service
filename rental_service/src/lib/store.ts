@@ -140,7 +140,7 @@ export function shareReservationInChat(reservation: Reservation) {
       from: "lender",
       text:
         reservation.method === "delivery"
-          ? "예약 수락했어요! 받는 날 오전에 도착하게 보내드릴게요."
+          ? "예약 수락했어요! 대여 시작일 오전에 도착하게 보내드릴게요."
           : "예약 수락했어요! 받으실 때 어디서 만나면 편하세요?",
     });
   }, 1800);

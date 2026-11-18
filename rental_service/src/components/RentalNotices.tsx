@@ -22,7 +22,7 @@ export function RentalNotices({ product }: { product: Product }) {
   const notices = [
     {
       title: "대여 기간",
-      body: `1일 · 3일 · 5일 · 1주일 중에 고를 수 있어요. 받는 날을 포함해 세고, 마지막 날 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요. (최대 ${MAX_RENTAL_DAYS}일)`,
+      body: `1일 · 3일 · 5일 · 1주일 중에 고를 수 있어요. 대여 시작일을 포함해 세고, 마지막 날 밤 ${RETURN_HOUR - 12}시까지 돌려주면 돼요. (최대 ${MAX_RENTAL_DAYS}일)`,
     },
     {
       title: "받는 방법",
@@ -42,7 +42,7 @@ export function RentalNotices({ product }: { product: Product }) {
     },
     {
       title: "취소",
-      body: "받는 날 하루 전까지는 무료로 취소할 수 있어요.",
+      body: "대여 시작일 하루 전까지는 무료로 취소할 수 있어요.",
     },
     CATEGORY_NOTICE[product.category],
   ];
