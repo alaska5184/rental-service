@@ -1,6 +1,6 @@
 import { useMemo, useSyncExternalStore } from "react";
 import type { Booking } from "../data/products";
-import type { Duration } from "./rental";
+import type { Duration, ReceiveMethod } from "./rental";
 
 export type ReservationStatus = "requested" | "confirmed";
 
@@ -10,9 +10,12 @@ export interface Reservation {
   start: number;
   end: number;
   duration: Duration;
-  days: number;
   quantity: number;
+  method: ReceiveMethod;
+  /** 택배로 받을 때 주소 */
+  address?: string;
   rentalPrice: number;
+  deliveryFee: number;
   deposit: number;
   status: ReservationStatus;
 }
@@ -31,7 +34,7 @@ interface State {
   chats: Record<string, ChatMessage[]>;
 }
 
-const STORAGE_KEY = "rental-demo-state";
+const STORAGE_KEY = "rental-demo-state-v2";
 
 // 새로고침해도 데모 예약·채팅이 남도록 탭 세션에 저장
 function load(): State {
@@ -128,7 +131,10 @@ export function shareReservationInChat(reservation: Reservation) {
     confirmReservation(reservation.id);
     pushMessage(reservation.productId, {
       from: "lender",
-      text: "예약 수락했어요! 받으실 때 어디서 만나면 편하세요?",
+      text:
+        reservation.method === "delivery"
+          ? "예약 수락했어요! 받는 날 오전에 도착하게 보내드릴게요."
+          : "예약 수락했어요! 받으실 때 어디서 만나면 편하세요?",
     });
   }, 1800);
 }

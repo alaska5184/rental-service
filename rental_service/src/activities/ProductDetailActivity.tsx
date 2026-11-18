@@ -75,6 +75,14 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
               <Text as="h1" textStyle="t7Bold" color="fg.neutral">
                 {product.name}
               </Text>
+              <Text
+                textStyle="t4Regular"
+                color="fg.neutralMuted"
+                maxLines={2}
+                style={{ whiteSpace: "pre-line", marginTop: "var(--seed-dimension-x1)" }}
+              >
+                {product.description}
+              </Text>
             </VStack>
             <VStack gap="x2">
               <InfoRow label="브랜드" value={product.brand} />
@@ -87,10 +95,10 @@ const ProductDetailActivity: StaticActivityComponentType<"ProductDetailActivity"
             <HStack gap="x3" align="center">
               <VStack gap="x0_5" flexGrow={1}>
                 <Text textStyle="t5Bold" color="fg.neutral">
-                  4시간 {formatWon(product.prices.h4)}~
+                  1일 {formatWon(product.prices.d1)}~
                 </Text>
                 <Text textStyle="t2Regular" color="fg.neutralMuted">
-                  1일 {formatWon(product.prices.day)}
+                  1주일 {formatWon(product.prices.d7)}
                 </Text>
               </VStack>
               <ActionButton

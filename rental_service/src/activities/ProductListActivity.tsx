@@ -121,7 +121,7 @@ function ProductRow({
             {availableFrom}
           </Text>
           <Text as="span" textStyle="t5Bold" color="fg.neutral">
-            1일 {formatWon(product.prices.day)}~
+            1일 {formatWon(product.prices.d1)}~
           </Text>
         </VStack>
       }

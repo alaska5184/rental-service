@@ -13,7 +13,13 @@ import { Snackbar, useSnackbarAdapter } from "seed-design/ui/snackbar";
 import { TextField, TextFieldInput } from "seed-design/ui/text-field";
 import { ProductPhoto } from "../components/ProductPhoto";
 import { getProduct, type Product } from "../data/products";
-import { durationText, formatDateTime, formatWon } from "../lib/rental";
+import {
+  DURATION_LABEL,
+  RECEIVE_METHOD_LABEL,
+  formatDateOnly,
+  formatDateTime,
+  formatWon,
+} from "../lib/rental";
 import {
   getReservation,
   sendMessage,
@@ -107,7 +113,7 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
                 {product.name}
               </Text>
               <Text textStyle="t3Bold" color="fg.neutral">
-                1일 {formatWon(product.prices.day)}
+                1일 {formatWon(product.prices.d1)}
               </Text>
             </VStack>
             <ActionButton
@@ -233,11 +239,13 @@ function ReservationCard({ reservation, product }: { reservation: Reservation; p
           {product.name}
         </Text>
         <Text textStyle="t3Regular" color="fg.neutralMuted">
-          {formatDateTime(reservation.start)} ~ {formatDateTime(reservation.end)}
+          {reservation.method === "delivery"
+            ? `${formatDateOnly(reservation.start)} ~ ${formatDateOnly(reservation.end)}`
+            : `${formatDateTime(reservation.start)} ~ ${formatDateTime(reservation.end)}`}
         </Text>
         <Text textStyle="t3Regular" color="fg.neutralMuted">
-          {durationText(reservation.duration, reservation.days)} · {reservation.quantity}개 ·{" "}
-          {formatWon(reservation.rentalPrice + reservation.deposit)}
+          {DURATION_LABEL[reservation.duration]} · {RECEIVE_METHOD_LABEL[reservation.method]} ·{" "}
+          {formatWon(reservation.rentalPrice + reservation.deliveryFee + reservation.deposit)}
         </Text>
       </VStack>
     </div>

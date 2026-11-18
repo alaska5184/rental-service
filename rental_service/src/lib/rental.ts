@@ -1,13 +1,28 @@
 import type { DatePickerDate } from "@seed-design/react";
 import type { Booking, Product } from "../data/products";
 
-export type Duration = "h4" | "h8" | "day";
+/** 대여 기간 (일). 최대 1주일 */
+export type Duration = 1 | 3 | 5 | 7;
+export const DURATIONS: Duration[] = [1, 3, 5, 7];
+export const MAX_RENTAL_DAYS = 7;
 
 export const DURATION_LABEL: Record<Duration, string> = {
-  h4: "4시간",
-  h8: "8시간",
-  day: "1일 이상",
+  1: "1일",
+  3: "3일",
+  5: "5일",
+  7: "1주일",
 };
+
+/** 받는 방법 */
+export type ReceiveMethod = "pickup" | "delivery";
+export const RECEIVE_METHOD_LABEL: Record<ReceiveMethod, string> = {
+  pickup: "가지러 가기",
+  delivery: "택배로 받기",
+};
+/** 택배 왕복 비용 (빌리는 사람 부담) */
+export const DELIVERY_FEE = 6000;
+/** 택배는 받는 날 오전에 도착한다고 보고 9시 기준으로 계산 */
+export const DELIVERY_HOUR = 9;
 
 /** 받는 시간으로 고를 수 있는 시각 (09:00 ~ 20:00, 1시간 간격) */
 export const PICKUP_HOURS = Array.from({ length: 12 }, (_, i) => 9 + i);
@@ -37,20 +52,17 @@ export function diffDays(start: DatePickerDate, end: DatePickerDate): number {
   return Math.round((toDate(end).getTime() - toDate(start).getTime()) / (24 * HOUR));
 }
 
-/** 대여 구간 계산: 받는 시각 ~ 돌려주는 시각 */
+/** 대여 구간: 받는 시각 ~ (일수 뒤) 같은 시각에 반납 */
 export function rentalInterval(
   pickupDate: DatePickerDate,
   hour: number,
-  duration: Duration,
   days: number,
 ): { start: number; end: number } {
   const start = toDate(pickupDate, hour).getTime();
-  if (duration === "h4") return { start, end: start + 4 * HOUR };
-  if (duration === "h8") return { start, end: start + 8 * HOUR };
   return { start, end: toDate(addDays(pickupDate, days), hour).getTime() };
 }
 
-/** 구간 동안 빌릴 수 있는 남은 수량 */
+/** 구간 동안 남아 있는 수량 */
 export function availableUnits(
   product: Product,
   start: number,
@@ -67,24 +79,22 @@ export function isSlotAvailable(
   product: Product,
   pickupDate: DatePickerDate,
   hour: number,
-  duration: Duration,
   days: number,
   extraBookings: Booking[] = [],
 ): boolean {
-  const { start, end } = rentalInterval(pickupDate, hour, duration, days);
+  const { start, end } = rentalInterval(pickupDate, hour, days);
   if (start <= Date.now()) return false;
   return availableUnits(product, start, end, extraBookings) > 0;
 }
 
-/** 그 날짜에 받을 수 있는 시간이 하나라도 있는지 */
+/** 그 날짜에 받아서 days일 동안 빌릴 수 있는 시간이 하나라도 있는지 */
 export function dateHasSlot(
   product: Product,
   date: DatePickerDate,
-  duration: Duration,
+  days: number,
   extraBookings: Booking[] = [],
 ): boolean {
-  const days = duration === "day" ? 1 : 0;
-  return PICKUP_HOURS.some((h) => isSlotAvailable(product, date, h, duration, days, extraBookings));
+  return PICKUP_HOURS.some((h) => isSlotAvailable(product, date, h, days, extraBookings));
 }
 
 /** 목록에 보여줄 가장 빠른 대여 가능 날짜 */
@@ -95,23 +105,13 @@ export function firstAvailableDate(
   const base = today();
   for (let i = 0; i < 60; i++) {
     const d = addDays(base, i);
-    if (dateHasSlot(product, d, "h4", extraBookings)) return d;
+    if (dateHasSlot(product, d, 1, extraBookings)) return d;
   }
   return undefined;
 }
 
-export function unitPrice(product: Product, duration: Duration): number {
-  return product.prices[duration];
-}
-
-export function rentalPrice(
-  product: Product,
-  duration: Duration,
-  days: number,
-  quantity: number,
-): number {
-  const multiplier = duration === "day" ? days : 1;
-  return unitPrice(product, duration) * multiplier * quantity;
+export function rentalPrice(product: Product, duration: Duration): number {
+  return product.prices[`d${duration}`];
 }
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -132,6 +132,10 @@ export function formatDateTime(ms: number): string {
   return `${formatDay(fromDate(date))} ${hh}:${mm}`;
 }
 
+export function formatDateOnly(ms: number): string {
+  return formatDay(fromDate(new Date(ms)));
+}
+
 export function formatHour(hour: number): string {
   return `${String(hour).padStart(2, "0")}:00`;
 }
@@ -141,9 +145,4 @@ export function formatAvailableFrom(d: DatePickerDate | undefined): string {
   if (!d) return "예약 마감";
   if (diffDays(today(), d) === 0) return "오늘 대여 가능";
   return `${formatDay(d)}부터 대여 가능`;
-}
-
-export function durationText(duration: Duration, days: number): string {
-  if (duration === "day") return `${days}일`;
-  return DURATION_LABEL[duration];
 }
