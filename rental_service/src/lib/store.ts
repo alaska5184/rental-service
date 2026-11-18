@@ -20,6 +20,11 @@ export interface Reservation {
   status: ReservationStatus;
 }
 
+export interface ChatLocation {
+  title: string;
+  detail: string;
+}
+
 export interface ChatMessage {
   id: string;
   from: "me" | "lender";
@@ -27,6 +32,8 @@ export interface ChatMessage {
   text?: string;
   /** 예약 내용 카드 */
   reservationId?: string;
+  /** 위치 카드 */
+  location?: ChatLocation;
 }
 
 interface State {
@@ -150,4 +157,16 @@ export function sendMessage(productId: string, text: string) {
       });
     }, 1200);
   }
+}
+
+/** AI 추천 메시지 보내기: 메시지를 보내고 데모용 대여자 답장을 받아요 */
+export function sendSuggestedMessage(
+  productId: string,
+  message: { text?: string; location?: ChatLocation },
+  reply: string,
+) {
+  pushMessage(productId, { from: "me", ...message });
+  window.setTimeout(() => {
+    pushMessage(productId, { from: "lender", text: reply });
+  }, 1200);
 }

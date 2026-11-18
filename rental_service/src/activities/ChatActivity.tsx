@@ -1,4 +1,8 @@
-import { IconPaperplaneFill } from "@karrotmarket/react-monochrome-icon";
+import {
+  IconLocationpinFill,
+  IconPaperplaneFill,
+  IconSparkle2Fill,
+} from "@karrotmarket/react-monochrome-icon";
 import { Box, HStack, Icon, Text, VStack } from "@seed-design/react";
 import { useActivityParams, useFlow, type StaticActivityComponentType } from "@stackflow/react";
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +11,7 @@ import { AppBar, AppBarBackButton, AppBarLeft, AppBarMain } from "seed-design/ui
 import { AppScreen, AppScreenContent } from "seed-design/ui/app-screen";
 import { Avatar } from "seed-design/ui/avatar";
 import { Badge } from "seed-design/ui/badge";
+import { Chip } from "seed-design/ui/chip";
 import { IdentityPlaceholder } from "seed-design/ui/identity-placeholder";
 import { MannerTempBadge } from "seed-design/ui/manner-temp-badge";
 import { Snackbar, useSnackbarAdapter } from "seed-design/ui/snackbar";
@@ -20,9 +25,11 @@ import {
   formatDateTime,
   formatWon,
 } from "../lib/rental";
+import { getChatSuggestions, type ChatSuggestion } from "../lib/chatSuggestions";
 import {
   getReservation,
   sendMessage,
+  sendSuggestedMessage,
   shareReservationInChat,
   useStore,
   type ChatMessage,
@@ -44,6 +51,21 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
   const messages = useStore((s) => s.chats[product.id] ?? EMPTY);
   const reservations = useStore((s) => s.reservations);
   const [draft, setDraft] = useState("");
+  const [usedSuggestions, setUsedSuggestions] = useState<string[]>([]);
+
+  // 이 상품의 가장 최근 예약 기준으로 상황에 맞는 추천을 보여줘요
+  const productReservations = reservations.filter((r) => r.productId === product.id);
+  const latestReservation =
+    (reservationId && productReservations.find((r) => r.id === reservationId)) ||
+    productReservations[productReservations.length - 1];
+  const suggestions = getChatSuggestions(product, latestReservation).filter(
+    (sg) => !usedSuggestions.includes(sg.id),
+  );
+
+  const sendSuggestion = (sg: ChatSuggestion) => {
+    sendSuggestedMessage(product.id, { text: sg.text, location: sg.location }, sg.reply);
+    setUsedSuggestions((prev) => [...prev, sg.id]);
+  };
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // 예약 완료 화면에서 들어오면 첫 메시지로 예약 카드를 보냄
@@ -150,16 +172,40 @@ function ChatScreen({ product, reservationId }: { product: Product; reservationI
             <div ref={bottomRef} />
           </VStack>
 
-          {/* 입력창 */}
+          {/* 입력창 + AI 추천 */}
           <Box
             as="form"
             onSubmit={submit}
             px="spacingX.globalGutter"
-            py="x2_5"
+            pt="x2_5"
+            pb="x2_5"
             borderTopWidth={1}
             borderColor="stroke.neutralSubtle"
             bg="bg.layerDefault"
           >
+            {suggestions.length > 0 && (
+              <div className="suggestion-bar" aria-label="AI 추천 메시지">
+                <span className="suggestion-label">
+                  <Icon svg={<IconSparkle2Fill />} size="x3_5" />
+                  AI 추천
+                </span>
+                {suggestions.map((sg) => (
+                  <Chip.Button
+                    key={sg.id}
+                    size="small"
+                    type="button"
+                    onClick={() => sendSuggestion(sg)}
+                  >
+                    {sg.kind === "location" && (
+                      <Chip.PrefixIcon>
+                        <Icon svg={<IconLocationpinFill />} />
+                      </Chip.PrefixIcon>
+                    )}
+                    <Chip.Label>{sg.label}</Chip.Label>
+                  </Chip.Button>
+                ))}
+              </div>
+            )}
             <HStack gap="x2" align="center">
               <Box flexGrow={1}>
                 <TextField
@@ -205,6 +251,21 @@ function MessageRow({
   return (
     <VStack gap="x1_5" align={message.from === "me" ? "flex-end" : "flex-start"}>
       {reservation && <ReservationCard reservation={reservation} product={product} />}
+      {message.location && (
+        <div className="location-card">
+          <div className="location-map" aria-hidden>
+            <Icon svg={<IconLocationpinFill />} size="x8" color="fg.brand" />
+          </div>
+          <VStack gap="x0_5" px="x3_5" py="x3">
+            <Text textStyle="t4Bold" color="fg.neutral">
+              {message.location.title}
+            </Text>
+            <Text textStyle="t3Regular" color="fg.neutralMuted">
+              {message.location.detail}
+            </Text>
+          </VStack>
+        </div>
+      )}
       {message.text && (
         <div className="bubble-row" data-from={message.from}>
           {message.from === "lender" && (

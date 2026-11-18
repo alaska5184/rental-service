@@ -185,3 +185,51 @@ body {
 .notice-list p {
   margin: 0;
 }
+
+/* ---------- 채팅 AI 추천 ---------- */
+.suggestion-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--seed-dimension-x1_5);
+  margin: 0 calc(-1 * var(--seed-dimension-spacing-x-global-gutter)) var(--seed-dimension-x2_5);
+  padding: 0 var(--seed-dimension-spacing-x-global-gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.suggestion-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.suggestion-bar > * {
+  flex: none;
+}
+
+.suggestion-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--seed-color-fg-brand);
+}
+
+/* ---------- 위치 카드 ---------- */
+.location-card {
+  width: 220px;
+  border: 1px solid var(--seed-color-stroke-neutral-weak);
+  border-radius: var(--seed-radius-r4);
+  background: var(--seed-color-bg-layer-default);
+  overflow: hidden;
+}
+
+.location-map {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--seed-color-bg-positive-weak);
+}
